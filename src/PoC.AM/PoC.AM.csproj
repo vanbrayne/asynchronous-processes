@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PoC.AM.Abstract\PoC.AM.Abstract.csproj" />
+    <ProjectReference Include="..\PoC.LinkLibraries\PoC.LinkLibraries.csproj" />
+  </ItemGroup>
+
+</Project>
