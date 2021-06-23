@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Nexus.Link.Libraries.Core.Application;
 using PoC.AM.Abstract.Exceptions;
 
 namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
@@ -17,16 +15,13 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
         {
             ProcessName = processName;
             ProcessId = processId;
-            FulcrumApplication.Context.AsyncContext.CurrentProcessId = processId;
-            throw new NotImplementedException();
         }
         
         public async Task<T> ExecuteAsync(int majorVersionNumber, string instanceTitle, CancellationToken cancellationToken, params object[] arguments)
         {
-            var instance = CreateInstance(majorVersionNumber, instanceTitle, arguments);
             // TODO: Verify arguments with Parameters
-            // TODO: Set the arguments: Parameters.SetArguments(arguments);
             var version = ProcessVersions.GetVersion(majorVersionNumber);
+            var instance = new ProcessInstance<T>(version, instanceTitle, arguments);
             try
             {
                 var result = await version.Method(instance, cancellationToken);
@@ -36,20 +31,13 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
             catch (PostponeException e)
             {
                 // TODO: Postpone
+                throw;
             }
             catch (Exception e)
             {
                 // TODO: Fatal error
+                throw;
             }
-        }
-
-        private ProcessInstance<T> CreateInstance(in int version, string instanceTitle, object[] arguments)
-        {
-            // TODO: Set start time
-            // TODO: Set correlation id
-            // TODO: Set arguments
-
-            throw new NotImplementedException();
         }
 
         public void Dispose()

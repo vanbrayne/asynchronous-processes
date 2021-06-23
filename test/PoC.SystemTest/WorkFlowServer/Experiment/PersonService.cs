@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode;
 
 namespace PoC.SystemTest.WorkFlowServer.Experiment
 {
@@ -10,7 +9,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment
         /// <inheritdoc />
         public Task<Person> ReadAsync(string id, CancellationToken token = new CancellationToken())
         {
-            return Task.FromResult(new Person()); ;
+            return Task.FromResult(new Person());
         }
 
         /// <inheritdoc />
@@ -22,7 +21,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment
         }
 
         /// <inheritdoc />
-        public async Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default)
+        public Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

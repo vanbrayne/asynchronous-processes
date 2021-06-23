@@ -28,11 +28,6 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
             throw new NotImplementedException();
         }
 
-        public void Increment()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<TMethodReturnType> ExecuteAsync<TMethodReturnType>(StepActionMethod<TProcessReturnType, TMethodReturnType> method, CancellationToken cancellationToken, params object[] arguments)
         {
             // TODO: Create/update LatestRequest in DB
@@ -42,6 +37,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
                 var result = await method(this, cancellationToken);
                 // TODO: Update the DB StepInstance with FinishedAt
                 // TODO: Create/update LatestResponse in DB
+                return result;
             }
             catch (PostponeException e)
             {
@@ -52,11 +48,6 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
                 // TODO: Smart error handling
                 throw;
             }
-        }
-
-        private ProcessStepInstance CreateInstance(ProcessStepInstance<TProcessReturnType> processStepInstance)
-        {
-            throw new NotImplementedException();
         }
     }
 }

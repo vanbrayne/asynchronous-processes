@@ -126,7 +126,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment
             }
             catch (FulcrumServiceContractException e)
             {
-                // Report to somone that knows 
+                // Report to someone that knows 
             }
             catch (FulcrumUnauthorizedException e)
             {

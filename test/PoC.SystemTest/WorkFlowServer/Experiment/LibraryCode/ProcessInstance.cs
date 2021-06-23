@@ -6,9 +6,10 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
     {
         private readonly ProcessVersion<T> _processVersion;
 
-        public ProcessInstance(ProcessVersion<T> processVersion)
+        public ProcessInstance(ProcessVersion<T> processVersion, string instanceTitle, params object[] arguments)
         {
             _processVersion = processVersion;
+            // TODO: Set the arguments: Parameters.SetArguments(arguments);
         }
 
         public Dictionary<string, object> Arguments { get; } = new Dictionary<string, object>();
@@ -19,7 +20,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
             var step = new ProcessStep<T>(_processVersion);
             var stepInstance = new ProcessStepInstance<T>(this, step); // TODO: Add step as input
             // TODO: Create a step instance in DB, with start time, etc
-            return stepInstance
+            return stepInstance;
         }
     }
 }
