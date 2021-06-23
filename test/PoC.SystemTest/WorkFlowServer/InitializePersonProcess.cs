@@ -4,26 +4,63 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Core.Application;
 using Nexus.Link.Libraries.Core.Error.Logic;
+using Nexus.Link.Libraries.Crud.Interfaces;
 using PoC.LinkLibraries;
+
 
 namespace PoC.SystemTest.WorkFlowServer
 {
-    public class InitializePersonProcess : NexusLinkProcess<Person>
+    public class PersonService : IPersonService
     {
-        private ICustomerInformationMgmt _customerInformationMgmt;
-
-        public InitializePersonProcess(ICustomerInformationMgmt customerInformationMgmt)
-        :base("Initialize person", "81B696D3-E27A-4CA8-9DC1-659B78DFE474")
+        /// <inheritdoc />
+        public async Task<Person> ReadAsync(string id, CancellationToken token = new CancellationToken())
         {
-            Parameters.Add("personalNumber");
-            Parameters.Add("emailAddress");
-            Versions.Add(1, Version1Async);
-            _customerInformationMgmt = customerInformationMgmt;
+            return new Person();;
         }
 
-        private async Task<Person> Version1Async(CancellationToken cancellationToken, params object[] parameters)
+        /// <inheritdoc />
+        public async Task<string> CreateAsync(Person item, CancellationToken token = new CancellationToken())
         {
-            personalNumber = 
+            var process = new CreatePersonProcess();
+            process.Execute(item);
+        }
+
+        /// <inheritdoc />
+        public async Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public async Task<Person> InitializePerson(string personalNumber, string emailAddress, CancellationToken cancellationToken = default)
+        {
+            var process = new InitializePersonProcess(null);
+            return await process.ExecuteAsync(1, personalNumber, emailAddress);
+        }
+    }
+
+    public class InitializePersonProcess : NexusLinkProcess<Person>
+    {
+        private ICustomerInformationMgmtCapability _customerInformationMgmt;
+
+        public InitializePersonProcess(ICustomerInformationMgmtCapability customerInformationMgmt)
+            : base("Initialize person", "81B696D3-E27A-4CA8-9DC1-659B78DFE474")
+        {
+            _customerInformationMgmt = customerInformationMgmt;
+            // TODO: How does this affect the data model?
+            //var version = Versions.Add(1, 2, Version1Async); 
+            //version.Parameters.Add("personalNumber");
+            var version = Versions.Add(2, 1, Version2Async);
+            version.Parameters.Add(1, "personalNumber");
+            version.Parameters.Add(2, "emailAddress");
+        }
+
+        private async Task<Person> Version2Async(CancellationToken cancellationToken, params object[] arguments)
+        {
+            var personalNumber = Arguments["personalNumber"];
+            var emailAddress = Arguments["emailAddress"];
+
+
             using var instance = _process.GetOrCreateInstance(1);
             // Create the process
             using var process = new NexusLinkProcess();
@@ -91,47 +128,46 @@ namespace PoC.SystemTest.WorkFlowServer
 
             }
         }
-    }
 
-    public interface ICustomerInformationMgmt
-    {
-    }
+        public Dictionary<string, object> Arguments { get; set; }
 
-    private async Task<Person> GetPersonActionAsync(string personalNumber)
-    {
-        var person = await
-            _customerInformationMgmt.Person.GetByPersonalNumberAsync<Person>(personalNumber, cancellationToken);
-        return person;
-    }
 
-    private async Task<OfficialPersonData> GetOfficialDataAsync(string personalNumber, string emailAddress)
-    {
-        try
+        private async Task<Person> GetPersonActionAsync(string personalNumber, CancellationToken cancellationToken)
         {
-            var personDataTemplate = await _restClient.GetAsync<Person>(
-                $"Klarna/Persons/{personalNumber}/{emailAdress}", cancellationToken: cancellationToken);
-            if (personDataTemplate == null)
+            var person = await
+                _customerInformationMgmt.Person.GetByPersonalNumberAsync(personalNumber, cancellationToken);
+            return person;
+        }
+
+        private async Task<OfficialPersonData> GetOfficialDataAsync(string personalNumber, string emailAddress)
+        {
+            try
             {
-                personDataTemplate = new Person
+                var personDataTemplate = await _restClient.GetAsync<Person>(
+                    $"Klarna/Persons/{personalNumber}/{emailAdress}", cancellationToken: cancellationToken);
+                if (personDataTemplate == null)
                 {
-                    PersonalNumber = personalNumber,
-                    EmailAddress = emailAdress
-                };
+                    personDataTemplate = new Person
+                    {
+                        PersonalNumber = personalNumber,
+                        EmailAddress = emailAdress
+                    };
+                }
             }
-        }
-        catch (FulcrumTimeOutException e)
-        {
-            // Escalate 
-        }
-        catch (FulcrumServiceContractException e)
-        {
-            // Report to somone that knows 
-        }
-        catch (FulcrumUnauthorizedException e)
-        {
-            // Report to process developers or process owner
-        }
+            catch (FulcrumTimeOutException e)
+            {
+                // Escalate 
+            }
+            catch (FulcrumServiceContractException e)
+            {
+                // Report to somone that knows 
+            }
+            catch (FulcrumUnauthorizedException e)
+            {
+                // Report to process developers or process owner
+            }
 
+        }
     }
 
     public class NexusLinkProcessAttribute : Attribute
@@ -150,7 +186,7 @@ namespace PoC.SystemTest.WorkFlowServer
     public abstract class NexusLinkProcess<T> : IDisposable
     {
         protected List<string> Parameters { get; } = new List<string>();
-        protected Dictionary<int, Func<object[], CancellationToken, Task<T>>> Versions { get; } = new Dictionary<int, Func<object[], CancellationToken, Task<T>>>();
+        protected VersionCollection<T> Versions { get;  } = new VersionCollection<T>();
         public string ProcessName { get; }
         public string ProcessId { get; }
         public NexusLinkProcess(string processName, string processId)
@@ -161,8 +197,10 @@ namespace PoC.SystemTest.WorkFlowServer
             throw new NotImplementedException();
         }
         
-        public async Task<T> Execute(int version, params object[] arguments)
+        public async Task<T> ExecuteAsync(int version, params object[] arguments)
         {
+            // TODO: Verify arguments with Parameters
+            Parameters.SetArguments(arguments);
         }
 
         public NexusLinkProcessStep Step(int stepNumber, string stepName)
@@ -192,6 +230,19 @@ namespace PoC.SystemTest.WorkFlowServer
         }
     }
 
+    public class VersionCollection<T>
+    {
+        public ProcessVersion Add(int majorVersion, int minorVersion, Func<CancellationToken, object[], Task<T>> method)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ProcessVersion
+    {
+        public Dictionary<int, string> Parameters { get;  } = new Dictionary<int, string>();
+    }
+
     public class NexusLinkProcessStep
     {
         public NexusLinkProcessStep AlwaysFresh()
@@ -212,5 +263,18 @@ namespace PoC.SystemTest.WorkFlowServer
 
     public class Person
     {
+    }
+
+    public interface ICustomerInformationMgmtCapability
+    {
+        IPersonService Person { get; set; }
+    }
+
+    public interface IPersonService : IRead<Person, string>, ICreate<Person, string>
+    {
+        Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default);
+
+        Task<Person> InitializePerson(string personalNumber, string emailAddress,
+            CancellationToken cancellationToken = default);
     }
 }
