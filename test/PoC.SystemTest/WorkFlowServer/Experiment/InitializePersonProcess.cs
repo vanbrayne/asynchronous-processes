@@ -7,7 +7,7 @@ using PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode;
 
 namespace PoC.SystemTest.WorkFlowServer.Experiment
 {
-    public class InitializePersonProcess : NexusLinkProcess<Person>
+    public class InitializePersonProcess : Process<Person>
     {
         private readonly ICustomerInformationMgmtCapability _customerInformationMgmt;
 
@@ -18,7 +18,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment
             // TODO: How does the major/minor version affect the data model?
             //var version = Versions.Add(1, 2, Version1Async); 
             //version.Parameters.Add("personalNumber");
-            var version = Versions.Add(2, 1, Version2Async);
+            var version = ProcessVersions.Add(2, 1, Version2Async);
             // TODO: Make Parameters a class and change Add to "Register".
             // TODO: NO need for numbers, they are sequential
             version.Parameters.Add(1, "personalNumber");
@@ -32,7 +32,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment
             var emailAddress = (string)processInstance.Arguments["emailAddress"];
             
             // 1. Action: Get person
-            var step = processInstance.Step("Get person", StepTypeEnum.Action, "A4D6F17F-ED40-4318-A08B-482302E53063").Synchronous();
+            var step = processInstance.Step("Get person", ProcessStepTypeEnum.Action, "A4D6F17F-ED40-4318-A08B-482302E53063").Synchronous();
             step.Parameters.Add(1, "personalNumber"); // Not mandatory
             var person = await step.ExecuteAsync(GetPersonActionAsync, cancellationToken, personalNumber);
 
