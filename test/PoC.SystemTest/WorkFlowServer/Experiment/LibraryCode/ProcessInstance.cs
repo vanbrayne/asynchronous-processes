@@ -19,27 +19,27 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 
         public abstract Task<T> ExecuteAsync(CancellationToken cancellationToken);
 
-        protected ProcessStepInstance<T> ActionStep(string stepTitle, string stepId)
+        protected ProcessStepInstance<T> ActionStep(string stepTitle, string stepId, TimeSpan? expiresAt = null)
         {
-            return Step(stepTitle, ProcessStepTypeEnum.Action, stepId);
+            return Step(stepTitle, ProcessStepTypeEnum.Action, stepId, expiresAt);
+        }
+        protected ProcessStepInstance<T> ConditionStep(string stepTitle, string stepId, TimeSpan? expiresAt = null)
+        {
+            return Step(stepTitle, ProcessStepTypeEnum.Condition, stepId, expiresAt);
         }
 
-        public ProcessStepInstance<T> Step(string stepName, ProcessStepTypeEnum stepTypeEnum, string stepId)
+        private ProcessStepInstance<T> Step(string stepName, ProcessStepTypeEnum stepTypeEnum, string stepId, TimeSpan? expiresAt)
         {
             // TODO: Get or create DB Step
             var step = new ProcessStep<T>(_processVersion, stepTypeEnum)
             {
                 Id = stepId,
                 Title = stepName,
+                ExpiresAt = expiresAt
             };
             var stepInstance = new ProcessStepInstance<T>(this, step); // TODO: Add step as input
             // TODO: Create a step instance in DB, with start time, etc
             return stepInstance;
-        }
-
-        protected ProcessStepInstance<T> ConditionStep(string stepTitle, string stepId)
-        {
-            return Step(stepTitle, ProcessStepTypeEnum.Condition, stepId);
         }
     }
 }

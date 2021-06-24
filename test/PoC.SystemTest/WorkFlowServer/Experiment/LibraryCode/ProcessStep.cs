@@ -1,4 +1,6 @@
-﻿namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
+﻿using System;
+
+namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 {
     public enum ProcessStepTypeEnum
     {
@@ -10,6 +12,7 @@
         public ProcessVersion<T> ProcessVersion { get; }
         public string Id { get; set; }
         public string Title { get; set; }
+        public TimeSpan? ExpiresAt { get; set; }
 
         public ProcessStep(ProcessVersion<T> processVersion, ProcessStepTypeEnum stepType)
         {

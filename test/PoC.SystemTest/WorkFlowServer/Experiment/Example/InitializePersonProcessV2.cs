@@ -12,7 +12,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
     {
         private Person _currentPersonInfo;
 
-        private InitializePersonProcessV2(ProcessVersion<Person> processVersion, string instanceName, object[] arguments) 
+        private InitializePersonProcessV2(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
             : base(processVersion, instanceName, arguments)
         {
 
@@ -32,66 +32,59 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
             var step = ActionStep("Get person", "A4D6F17F-ED40-4318-A08B-482302E53063")
                 .Synchronous();
             step.Parameters.Add(1, "personalNumber"); // Not mandatory
-            _currentPersonInfo= await step.ExecuteAsync(GetPersonActionAsync, cancellationToken, personalNumber);
+            _currentPersonInfo = await step.ExecuteAsync(GetPersonActionAsync, cancellationToken, personalNumber);
 
             // 2. Condition: Person exists?
-            step = ConditionStep( "Person exists?", "C5A628AC-5BAD-4DF9-BA46-B878C06D47CE");
+            step = ConditionStep("Person exists?", "C5A628AC-5BAD-4DF9-BA46-B878C06D47CE");
             var exists = await step.EvaluateAsync(PersonExistsAsync, cancellationToken);
-            if (exists)
-            {
-                // Terminate
-                return process.Terminate(person);
-            }
-            else
-            {
+            if (exists) return _currentPersonInfo;
 
-                // 3. Get official data
-                step = process.Step(3, "Get official data", TimeSpan.FromHours(1))
-                    .Idempotent();
-                var officialPersonData = await step.ExecuteAsync(GetOfficialDataAsync, personalNumber, emailAddress);
+            // 3. Get official data
+            step = ActionStep( "Get official data", "BA96BC20-83F3-4042-BA1C-B1068DE0AD8D", TimeSpan.FromHours(1))
+                .Idempotent();
+            var officialPersonData = await step.ExecuteAsync(GetOfficialDataAsync, personalNumber, emailAddress);
 
 
 
-                // 4. Loop to get valid person data
-                step = process.AsyncStep(4, "Loop to get valid person data");
-                await step.Loop(GetValidDataFromPerson, officialPersonData)
+            // 4. Loop to get valid person data
+            step = process.AsyncStep(4, "Loop to get valid person data");
+            await step.Loop(GetValidDataFromPerson, officialPersonData)
                 bool isValid;
-                do
-                {
-                    loop.Increment();
-                    process.CreateStep(loop, 1, "Ask user to fill in missing data.");
-                    person =
-                        await _restClient.PostAndReturnCreatedObjectAsync<Person>("CustomerCommunication/GetPersonData",
-                            personDataTemplate, cancellationToken: cancellationToken);
+            do
+            {
+                loop.Increment();
+                process.CreateStep(loop, 1, "Ask user to fill in missing data.");
+                person =
+                    await _restClient.PostAndReturnCreatedObjectAsync<Person>("CustomerCommunication/GetPersonData",
+                        personDataTemplate, cancellationToken: cancellationToken);
 
-                    process.CreateStep(loop, 2, "Validate customer input");
-                    isValid = await _restClient.PostAsync<bool, Person>($"CustomerInformationMgmt/Validate", person,
-                        cancellationToken: cancellationToken);
-                } while (!isValid);
-
-
-                // Sequential loop
-                loop = process.CreateLoopStep(2, "Loop to get and validate person data");
-                foreach (var p in persons)
-                {
-                    loop.Increment();
-                    process.CreateStep(loop, 1, "Verify existence.");
-                    var outPerson = await _restClient.GetAsync<Person>($"Persons/{p.Id}", null, cancellationToken);
-                }
+                process.CreateStep(loop, 2, "Validate customer input");
+                isValid = await _restClient.PostAsync<bool, Person>($"CustomerInformationMgmt/Validate", person,
+                    cancellationToken: cancellationToken);
+            } while (!isValid);
 
 
-                // Parallel loop
-                loop = process.CreateLoopStep(2, "Loop to get and validate person data");
-                var taskList = new List<Task<Person>>();
-                foreach (var p in persons)
-                {
-                    loop.Increment();
-                    process.CreateStep(loop, 1, "Verify existence.");
-                    var task = _restClient.GetAsync<Person>($"Persons/{person.Id}", null, cancellationToken);
-                    taskList.Add(task);
-                }
-
+            // Sequential loop
+            loop = process.CreateLoopStep(2, "Loop to get and validate person data");
+            foreach (var p in persons)
+            {
+                loop.Increment();
+                process.CreateStep(loop, 1, "Verify existence.");
+                var outPerson = await _restClient.GetAsync<Person>($"Persons/{p.Id}", null, cancellationToken);
             }
+
+
+            // Parallel loop
+            loop = process.CreateLoopStep(2, "Loop to get and validate person data");
+            var taskList = new List<Task<Person>>();
+            foreach (var p in persons)
+            {
+                loop.Increment();
+                process.CreateStep(loop, 1, "Verify existence.");
+                var task = _restClient.GetAsync<Person>($"Persons/{person.Id}", null, cancellationToken);
+                taskList.Add(task);
+            }
+
         }
 
         private Task<bool> PersonExistsAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
