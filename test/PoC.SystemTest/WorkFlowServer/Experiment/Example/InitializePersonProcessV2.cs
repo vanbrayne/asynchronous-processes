@@ -10,6 +10,8 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
 {
     public class InitializePersonProcessV2 : ProcessInstance<Person>
     {
+        private Person _currentPersonInfo;
+
         private InitializePersonProcessV2(ProcessVersion<Person> processVersion, string instanceName, object[] arguments) 
             : base(processVersion, instanceName, arguments)
         {
@@ -30,11 +32,11 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
             var step = ActionStep("Get person", "A4D6F17F-ED40-4318-A08B-482302E53063")
                 .Synchronous();
             step.Parameters.Add(1, "personalNumber"); // Not mandatory
-            var person = await step.ExecuteAsync(GetPersonActionAsync, cancellationToken, personalNumber);
+            _currentPersonInfo= await step.ExecuteAsync(GetPersonActionAsync, cancellationToken, personalNumber);
 
             // 2. Condition: Person exists?
-            step = process.Step(2, "Person exists?");
-            var exists = step.Evaluate(person != null);
+            step = ConditionStep( "Person exists?", "C5A628AC-5BAD-4DF9-BA46-B878C06D47CE");
+            var exists = await step.EvaluateAsync(PersonExistsAsync, cancellationToken);
             if (exists)
             {
                 // Terminate
@@ -92,6 +94,10 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
             }
         }
 
+        private Task<bool> PersonExistsAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(_currentPersonInfo != null);
+        }
 
         private async Task<Person> GetPersonActionAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
