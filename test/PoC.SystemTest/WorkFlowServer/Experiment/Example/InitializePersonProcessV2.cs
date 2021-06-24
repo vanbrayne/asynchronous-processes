@@ -18,7 +18,8 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
         {
 
         }
-        public static InitializePersonProcessV2 Create(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
+
+        public static InitializePersonProcessV2 Factory(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
         {
             return new InitializePersonProcessV2(processVersion, instanceName, arguments);
         }

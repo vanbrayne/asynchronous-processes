@@ -41,7 +41,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
         {
             // TODO: Verify arguments with Parameters
 
-            var methodInfo = version.Type.GetMethod("Create");
+            var methodInfo = version.Type.GetMethod(nameof(ProcessInstance<T>.CreateInstance));
             // TODO: Proper error message
             InternalContract.RequireNotNull(methodInfo, null, $"Error message");
             var createMethod = (Func<ProcessVersion<T>, string, object[], ProcessInstance<T>>)Delegate.CreateDelegate(

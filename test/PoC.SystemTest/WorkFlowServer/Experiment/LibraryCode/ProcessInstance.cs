@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Nexus.Link.Libraries.Core.Assert;
 
 namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 {
     public abstract class ProcessInstance<T>
     {
+        public static ProcessInstance<T> Factory(ProcessVersion<T> processVersion, string instanceName, object[] arguments)
+        {
+            throw new NotImplementedException($"You should create your own factory method with the same signature in your class.");
+        }
+
         public ProcessVersion<T> ProcessVersion { get; }
 
         public ProcessDefinition<T> ProcessDefinition => ProcessVersion.ProcessDefinition;
