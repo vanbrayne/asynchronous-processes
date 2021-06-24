@@ -1,4 +1,4 @@
-﻿namespace PoC.SystemTest.WorkFlowServer.Experiment
+﻿namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformationMgmt
 {
     public interface ICustomerInformationMgmtCapability
     {

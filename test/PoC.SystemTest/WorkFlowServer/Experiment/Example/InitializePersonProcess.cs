@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Core.Error.Logic;
+using PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformationMgmt;
 using PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment
+namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
 {
     public class InitializePersonProcess : Process<Person>
     {

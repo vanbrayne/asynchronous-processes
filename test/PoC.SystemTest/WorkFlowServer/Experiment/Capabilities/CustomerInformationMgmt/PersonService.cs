@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using PoC.SystemTest.WorkFlowServer.Experiment.Example;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment
+namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformationMgmt
 {
     public class PersonService : IPersonService
     {
