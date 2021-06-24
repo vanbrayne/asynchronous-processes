@@ -34,17 +34,19 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
             // TODO: Define parameters
             var action = ActionStep("Get person", "A4D6F17F-ED40-4318-A08B-482302E53063")
                 .Synchronous();
-            action.Parameters.Add(1, "personalNumber"); // Not mandatory
+            action.Parameters.Add(1, "Person");
             var existingPerson = await action.ExecuteAsync(GetPersonActionAsync, cancellationToken, _initialPerson);
 
             // 2. Condition: Person exists?
             var condition = ConditionStep("Person exists?", "C5A628AC-5BAD-4DF9-BA46-B878C06D47CE");
+            condition.Parameters.Add(1, "Person");
             var exists = await condition.EvaluateAsync(PersonExistsAsync, cancellationToken, _initialPerson);
             if (exists) return existingPerson;
 
             // 3. Get official data
             action = ActionStep("Get official data", "BA96BC20-83F3-4042-BA1C-B1068DE0AD8D", TimeSpan.FromHours(1))
                 .Idempotent();
+            action.Parameters.Add(1, "Person");
             var officialPersonData = await action.ExecuteAsync(GetOfficialDataAsync, cancellationToken, _initialPerson);
 
             // 4. Loop to get valid person data
