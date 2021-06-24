@@ -15,10 +15,9 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
             //var version = Versions.Add(1, 2, Version1Async); 
             //version.Parameters.Add("personalNumber");
             var version = ProcessVersions.Add<InitializePersonProcessV2>(2, 1);
-            // TODO: Make Parameters a class and change Add to "Register".
+            // TODO: Make Parameters a class and change Add to Register(string parameterName, Type parameterType)
             // TODO: NO need for numbers, they are sequential
-            version.Parameters.Add(1, "personalNumber");
-            version.Parameters.Add(2, "emailAddress");
+            version.Parameters.Add(1, "Person");
 
         }
     }

@@ -8,11 +8,11 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
     public delegate Task<T> ProcessMethod<T>(ProcessInstance<T> processInstance, CancellationToken cancellationToken);
     public class ProcessVersion<T>
     {
-        private readonly ProcessDefinition<T> _processDefinition;
+        public ProcessDefinition<T> ProcessDefinition { get; }
 
         public ProcessVersion(ProcessDefinition<T> processDefinition)
         {
-            _processDefinition = processDefinition;
+            ProcessDefinition = processDefinition;
         }
         public Dictionary<int, string> Parameters { get;  } = new Dictionary<int, string>();
         public int MajorVersion { get; set; }
@@ -20,6 +20,6 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
         public Type Type { get; set; }
 
         /// <inheritdoc />
-        public override string ToString() => $"{_processDefinition} {MajorVersion}.{MinorVersion}";
+        public override string ToString() => $"{ProcessDefinition} {MajorVersion}.{MinorVersion}";
     }
 }

@@ -10,7 +10,8 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
 {
     public class InitializePersonProcessV2 : ProcessInstance<Person>
     {
-        private Person _currentPersonInfo;
+        private Person _initialPerson;
+        private Person _personSoFar;
 
         private InitializePersonProcessV2(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
             : base(processVersion, instanceName, arguments)
@@ -25,26 +26,23 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
         public override async Task<Person> ExecuteAsync(CancellationToken cancellationToken)
         {
             // TODO: Type check the argument vs. the cast type
-            var personalNumber = (string)Arguments["personalNumber"];
-            var emailAddress = (string)Arguments["emailAddress"];
+            _initialPerson = (Person)Arguments["Person"];
 
             // 1. Action: Get person
             var step = ActionStep("Get person", "A4D6F17F-ED40-4318-A08B-482302E53063")
                 .Synchronous();
             step.Parameters.Add(1, "personalNumber"); // Not mandatory
-            _currentPersonInfo = await step.ExecuteAsync(GetPersonActionAsync, cancellationToken, personalNumber);
+            _personSoFar = await step.ExecuteAsync(GetPersonActionAsync, cancellationToken, _initialPerson);
 
             // 2. Condition: Person exists?
             step = ConditionStep("Person exists?", "C5A628AC-5BAD-4DF9-BA46-B878C06D47CE");
             var exists = await step.EvaluateAsync(PersonExistsAsync, cancellationToken);
-            if (exists) return _currentPersonInfo;
+            if (exists) return _personSoFar;
 
             // 3. Get official data
-            step = ActionStep( "Get official data", "BA96BC20-83F3-4042-BA1C-B1068DE0AD8D", TimeSpan.FromHours(1))
+            step = ActionStep("Get official data", "BA96BC20-83F3-4042-BA1C-B1068DE0AD8D", TimeSpan.FromHours(1))
                 .Idempotent();
-            var officialPersonData = await step.ExecuteAsync(GetOfficialDataAsync, personalNumber, emailAddress);
-
-
+            var officialPersonData = await step.ExecuteAsync(GetOfficialDataAsync, cancellationToken, _initialPerson);
 
             // 4. Loop to get valid person data
             step = process.AsyncStep(4, "Loop to get valid person data");
@@ -89,18 +87,17 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
 
         private Task<bool> PersonExistsAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_currentPersonInfo != null);
+            return Task.FromResult(_personSofar != null);
         }
 
         private async Task<Person> GetPersonActionAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
-            var personalNumber = (string)stepInstance.Arguments["personalNumber"];
-            var person = await
-                _customerInformationMgmt.Person.GetByPersonalNumberAsync(personalNumber, cancellationToken);
+            var inPerson = (Person)Arguments["Person"];
+            var person = ProcessDefinition..Person.GetByPersonalNumberAsync(_initialPerson.PersonalNumber, cancellationToken);
             return person;
         }
 
-        private async Task<OfficialPersonData> GetOfficialDataAsync(string personalNumber, string emailAddress)
+        private async Task<Person> GetOfficialDataAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
             try
             {

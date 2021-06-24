@@ -7,11 +7,13 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 {
     public abstract class ProcessInstance<T>
     {
-        private readonly ProcessVersion<T> _processVersion;
+        public ProcessVersion<T> ProcessVersion { get; }
+
+        public ProcessDefinition<T> ProcessDefinition => ProcessVersion.ProcessDefinition;
 
         protected ProcessInstance(ProcessVersion<T> processVersion, string instanceTitle, params object[] arguments)
         {
-            _processVersion = processVersion;
+            ProcessVersion = processVersion;
             // TODO: Set the arguments: Parameters.SetArguments(arguments);
         }
 
@@ -31,7 +33,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
         private ProcessStepInstance<T> Step(string stepName, ProcessStepTypeEnum stepTypeEnum, string stepId, TimeSpan? expiresAt)
         {
             // TODO: Get or create DB Step
-            var step = new ProcessStep<T>(_processVersion, stepTypeEnum)
+            var step = new ProcessStep<T>(ProcessVersion, stepTypeEnum)
             {
                 Id = stepId,
                 Title = stepName,
