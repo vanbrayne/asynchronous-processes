@@ -5,12 +5,12 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
 {
     public class CreatePersonProcess : ProcessDefinition<Person>
     {
-        private readonly ICustomerInformationMgmtCapability _customerInformationMgmt;
+        public ICustomerInformationMgmtCapability CustomerInformationMgmt { get; }
 
         public CreatePersonProcess(ICustomerInformationMgmtCapability customerInformationMgmt)
         : base("Initialize person", "81B696D3-E27A-4CA8-9DC1-659B78DFE474")
         {
-            _customerInformationMgmt = customerInformationMgmt;
+            CustomerInformationMgmt = customerInformationMgmt;
             // TODO: How does the major/minor version affect the data model?
             //var version = Versions.Add(1, 2, Version1Async); 
             //version.Parameters.Add("personalNumber");

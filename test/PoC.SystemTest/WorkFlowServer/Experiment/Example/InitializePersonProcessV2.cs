@@ -13,13 +13,14 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
         private Person _initialPerson;
         private Person _personSoFar;
 
+        public new CreatePersonProcess ProcessDefinition => (CreatePersonProcess) base.ProcessDefinition;
+
         private InitializePersonProcessV2(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
             : base(processVersion, instanceName, arguments)
         {
-
         }
 
-        public static InitializePersonProcessV2 Factory(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
+        public new static InitializePersonProcessV2 CreateInstance(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
         {
             return new InitializePersonProcessV2(processVersion, instanceName, arguments);
         }
@@ -84,18 +85,19 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
                 taskList.Add(task);
             }
 
-        }
-
-        private Task<bool> PersonExistsAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(_personSofar != null);
+            return _personSoFar;
         }
 
         private async Task<Person> GetPersonActionAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
             var inPerson = (Person)Arguments["Person"];
-            var person = ProcessDefinition..Person.GetByPersonalNumberAsync(_initialPerson.PersonalNumber, cancellationToken);
+            var person = await ProcessDefinition.CustomerInformationMgmt.Person.GetByPersonalNumberAsync(_initialPerson.PersonalNumber, cancellationToken);
             return person;
+        }
+
+        private Task<bool> PersonExistsAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(_personSoFar != null);
         }
 
         private async Task<Person> GetOfficialDataAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)

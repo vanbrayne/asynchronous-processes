@@ -8,7 +8,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 {
     public abstract class ProcessInstance<T>
     {
-        public static ProcessInstance<T> Factory(ProcessVersion<T> processVersion, string instanceName, object[] arguments)
+        public static ProcessInstance<T> CreateInstance(ProcessVersion<T> processVersion, string instanceName, object[] arguments)
         {
             throw new NotImplementedException($"You should create your own factory method with the same signature in your class.");
         }
