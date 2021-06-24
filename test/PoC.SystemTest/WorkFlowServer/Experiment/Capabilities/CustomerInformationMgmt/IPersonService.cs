@@ -8,7 +8,5 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformat
     {
         Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default);
 
-        Task<Person> InitializePerson(string personalNumber, string emailAddress,
-            CancellationToken cancellationToken = default);
     }
 }

@@ -8,32 +8,27 @@ using PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode;
 
 namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
 {
-    public class InitializePersonProcess : Process<Person>
+    public class InitializePersonProcessV2 : ProcessInstance<Person>
     {
-        private readonly ICustomerInformationMgmtCapability _customerInformationMgmt;
-
-        public InitializePersonProcess(ICustomerInformationMgmtCapability customerInformationMgmt)
-            : base("Initialize person", "81B696D3-E27A-4CA8-9DC1-659B78DFE474")
+        private InitializePersonProcessV2(ProcessVersion<Person> processVersion, string instanceName, object[] arguments) 
+            : base(processVersion, instanceName, arguments)
         {
-            _customerInformationMgmt = customerInformationMgmt;
-            // TODO: How does the major/minor version affect the data model?
-            //var version = Versions.Add(1, 2, Version1Async); 
-            //version.Parameters.Add("personalNumber");
-            var version = ProcessVersions.Add(2, 1, Version2Async);
-            // TODO: Make Parameters a class and change Add to "Register".
-            // TODO: NO need for numbers, they are sequential
-            version.Parameters.Add(1, "personalNumber");
-            version.Parameters.Add(2, "emailAddress");
+
+        }
+        public static InitializePersonProcessV2 Create(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
+        {
+            return new InitializePersonProcessV2(processVersion, instanceName, arguments);
         }
 
-        private async Task<Person> Version2Async(ProcessInstance<Person> processInstance, CancellationToken cancellationToken)
+        public override async Task<Person> ExecuteAsync(CancellationToken cancellationToken)
         {
             // TODO: Type check the argument vs. the cast type
-            var personalNumber = (string) processInstance.Arguments["personalNumber"];
-            var emailAddress = (string)processInstance.Arguments["emailAddress"];
-            
+            var personalNumber = (string)Arguments["personalNumber"];
+            var emailAddress = (string)Arguments["emailAddress"];
+
             // 1. Action: Get person
-            var step = processInstance.Step("Get person", ProcessStepTypeEnum.Action, "A4D6F17F-ED40-4318-A08B-482302E53063").Synchronous();
+            var step = ActionStep("Get person", "A4D6F17F-ED40-4318-A08B-482302E53063")
+                .Synchronous();
             step.Parameters.Add(1, "personalNumber"); // Not mandatory
             var person = await step.ExecuteAsync(GetPersonActionAsync, cancellationToken, personalNumber);
 
@@ -100,7 +95,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
 
         private async Task<Person> GetPersonActionAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
-            var personalNumber = (string) stepInstance.Arguments["personalNumber"];
+            var personalNumber = (string)stepInstance.Arguments["personalNumber"];
             var person = await
                 _customerInformationMgmt.Person.GetByPersonalNumberAsync(personalNumber, cancellationToken);
             return person;

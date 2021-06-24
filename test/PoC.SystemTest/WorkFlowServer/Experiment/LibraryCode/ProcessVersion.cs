@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +11,6 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
         public Dictionary<int, string> Parameters { get;  } = new Dictionary<int, string>();
         public int MajorVersion { get; set; }
         public int MinorVersion { get; set; }
-        public ProcessMethod<T> Method { get; set; }
+        public Type Type { get; set; }
     }
 }

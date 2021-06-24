@@ -7,6 +7,12 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformat
 {
     public class PersonService : IPersonService
     {
+        private readonly CreatePersonProcess _createProcess;
+
+        public PersonService()
+        {
+            _createProcess = new CreatePersonProcess(null);
+        }
         /// <inheritdoc />
         public Task<Person> ReadAsync(string id, CancellationToken token = new CancellationToken())
         {
@@ -14,24 +20,17 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformat
         }
 
         /// <inheritdoc />
-        public Task<string> CreateAsync(Person item, CancellationToken token = new CancellationToken())
+        public async Task<string> CreateAsync(Person item, CancellationToken cancellationToken = default)
         {
-            //var process = new CreatePersonProcess();
-            //process.Execute(item);
-            return Task.FromResult("done");
+            // TODO: Always use latest version
+            var person = await _createProcess.ExecuteAsync($"{item.EmailAddress}", cancellationToken, item.PersonalNumber, item.EmailAddress);
+            return person.Id;
         }
 
         /// <inheritdoc />
         public Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public async Task<Person> InitializePerson(string personalNumber, string emailAddress, CancellationToken cancellationToken = default)
-        {
-            var process = new InitializePersonProcess(null);
-            return await process.ExecuteAsync(1, emailAddress, cancellationToken, personalNumber, emailAddress);
         }
     }
 }

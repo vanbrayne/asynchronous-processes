@@ -28,6 +28,11 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
             throw new NotImplementedException();
         }
 
+        public ProcessStepInstance<TProcessReturnType> Idempotent()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<TMethodReturnType> ExecuteAsync<TMethodReturnType>(StepActionMethod<TProcessReturnType, TMethodReturnType> method, CancellationToken cancellationToken, params object[] arguments)
         {
             // TODO: Create/update LatestRequest in DB

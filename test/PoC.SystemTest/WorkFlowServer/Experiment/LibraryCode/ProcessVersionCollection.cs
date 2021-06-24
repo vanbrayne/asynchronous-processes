@@ -1,17 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 {
     public class ProcessVersionCollection<T>
     {
         public Dictionary<int, ProcessVersion<T>> Versions = new Dictionary<int, ProcessVersion<T>>();
-        public ProcessVersion<T> Add(int majorVersion, int minorVersion, ProcessMethod<T> method)
+        public ProcessVersion<T> Add<TInstanceType>(int majorVersion, int minorVersion) where TInstanceType : ProcessInstance<T>
         {
             var processVersion = new ProcessVersion<T>
             {
                 MajorVersion = majorVersion,
                 MinorVersion = minorVersion,
-                Method = method
+                Type = typeof(TInstanceType)
             };
             Versions.Add(majorVersion, processVersion);
             return processVersion;
@@ -21,6 +23,12 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
         {
             // TODO: Validate majorVersionNumber, e.g. contains
             return Versions[majorVersionNumber];
+        }
+
+        public ProcessVersion<T> GetLatestVersion()
+        {
+            var latestMajorVersion =  Versions.Values.Max(v => v.MajorVersion);
+            return GetVersion(latestMajorVersion);
         }
     }
 }
