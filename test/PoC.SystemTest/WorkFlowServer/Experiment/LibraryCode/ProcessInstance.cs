@@ -29,14 +29,35 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 
         protected ProcessStepInstance<T> ActionStep(string stepTitle, string stepId, TimeSpan? expiresAt = null)
         {
-            return Step(stepTitle, ProcessStepTypeEnum.Action, stepId, expiresAt);
-        }
-        protected ProcessStepInstance<T> ConditionStep(string stepTitle, string stepId, TimeSpan? expiresAt = null)
-        {
-            return Step(stepTitle, ProcessStepTypeEnum.Condition, stepId, expiresAt);
+            return Step(null, stepTitle, ProcessStepTypeEnum.Action, stepId, expiresAt);
         }
 
-        private ProcessStepInstance<T> Step(string stepName, ProcessStepTypeEnum stepTypeEnum, string stepId, TimeSpan? expiresAt)
+        protected ProcessStepInstance<T> ConditionStep(ProcessStepInstance<T> parentStep, string stepTitle, string stepId, TimeSpan? expiresAt = null)
+        {
+            return Step(parentStep, stepTitle, ProcessStepTypeEnum.Condition, stepId, expiresAt);
+        }
+
+        protected ProcessStepInstance<T> LoopStep(string stepTitle, string stepId, TimeSpan? expiresAt = null)
+        {
+            return Step(null, stepTitle, ProcessStepTypeEnum.Loop, stepId, expiresAt);
+        }
+
+        protected ProcessStepInstance<T> ActionStep(ProcessStepInstance<T> parentStep, string stepTitle, string stepId, TimeSpan? expiresAt = null)
+        {
+            return Step(parentStep, stepTitle, ProcessStepTypeEnum.Action, stepId, expiresAt);
+        }
+
+        protected ProcessStepInstance<T> ConditionStep(string stepTitle, string stepId, TimeSpan? expiresAt = null)
+        {
+            return Step(null, stepTitle, ProcessStepTypeEnum.Condition, stepId, expiresAt);
+        }
+
+        protected ProcessStepInstance<T> LoopStep(ProcessStepInstance<T> parentStep, string stepTitle, string stepId, TimeSpan? expiresAt = null)
+        {
+            return Step(parentStep, stepTitle, ProcessStepTypeEnum.Loop, stepId, expiresAt);
+        }
+
+        private ProcessStepInstance<T> Step(ProcessStepInstance<T> parentStep, string stepName, ProcessStepTypeEnum stepTypeEnum, string stepId, TimeSpan? expiresAt)
         {
             // TODO: Get or create DB Step
             var step = new ProcessStep<T>(ProcessVersion, stepTypeEnum)

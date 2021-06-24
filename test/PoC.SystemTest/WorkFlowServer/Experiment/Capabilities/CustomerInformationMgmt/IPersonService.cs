@@ -7,6 +7,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformat
     public interface IPersonService : IRead<Person, string>, ICreate<Person, string>
     {
         Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default);
+        Task<Person> GetOfficialInformation(Person person, CancellationToken cancellationToken = default);
 
     }
 }

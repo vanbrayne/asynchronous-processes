@@ -6,10 +6,16 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 {
     public class ProcessVersionCollection<T>
     {
+        public ProcessDefinition<T> ProcessDefinition { get; }
+
+        public ProcessVersionCollection(ProcessDefinition<T> processDefinition)
+        {
+            ProcessDefinition = processDefinition;
+        }
         public Dictionary<int, ProcessVersion<T>> Versions = new Dictionary<int, ProcessVersion<T>>();
         public ProcessVersion<T> Add<TInstanceType>(int majorVersion, int minorVersion) where TInstanceType : ProcessInstance<T>
         {
-            var processVersion = new ProcessVersion<T>
+            var processVersion = new ProcessVersion<T>(ProcessDefinition)
             {
                 MajorVersion = majorVersion,
                 MinorVersion = minorVersion,

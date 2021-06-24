@@ -36,8 +36,8 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 
         public Task<TMethodReturnType> ExecuteAsync<TMethodReturnType>(StepActionMethod<TProcessReturnType, TMethodReturnType> method, CancellationToken cancellationToken, params object[] arguments)
         {
-            InternalContract.RequireAreEqual(ProcessStepTypeEnum.Action, _processStep.StepType, null, 
-                $"The step {_processStep} was declared as {_processStep.StepType}, so you can't call {nameof(ExecuteAsync)}.");
+            InternalContract.Require(_processStep.StepType == ProcessStepTypeEnum.Action || _processStep.StepType == ProcessStepTypeEnum.Loop,
+            $"The step {_processStep} was declared as {_processStep.StepType}, so you can't call {nameof(ExecuteAsync)}.");
 
             return InternalExecuteAsync(method, cancellationToken, arguments);
         }
@@ -70,6 +70,13 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
                 // TODO: Smart error handling
                 throw;
             }
+        }
+
+        public Task IterationAsync(int i)
+        {
+            InternalContract.RequireAreEqual(ProcessStepTypeEnum.Loop, _processStep.StepType, null, 
+                $"The step {_processStep} was declared as {_processStep.StepType}, so you can't call {nameof(EvaluateAsync)}.");
+            throw new NotImplementedException();
         }
     }
 }

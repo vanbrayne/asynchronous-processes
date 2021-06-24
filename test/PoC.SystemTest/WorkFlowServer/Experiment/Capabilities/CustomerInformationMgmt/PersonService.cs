@@ -32,5 +32,11 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformat
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc />
+        public Task<Person> GetOfficialInformation(Person person, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
