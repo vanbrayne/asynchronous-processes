@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,18 +19,27 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 
         public abstract Task<T> ExecuteAsync(CancellationToken cancellationToken);
 
-        public ProcessStepInstance<T> ActionStep(string stepName, string stepId)
+        protected ProcessStepInstance<T> ActionStep(string stepTitle, string stepId)
         {
-            return Step(stepName, ProcessStepTypeEnum.Action, stepId);
+            return Step(stepTitle, ProcessStepTypeEnum.Action, stepId);
         }
 
         public ProcessStepInstance<T> Step(string stepName, ProcessStepTypeEnum stepTypeEnum, string stepId)
         {
             // TODO: Get or create DB Step
-            var step = new ProcessStep<T>(_processVersion);
+            var step = new ProcessStep<T>(_processVersion, stepTypeEnum)
+            {
+                Id = stepId,
+                Title = stepName,
+            };
             var stepInstance = new ProcessStepInstance<T>(this, step); // TODO: Add step as input
             // TODO: Create a step instance in DB, with start time, etc
             return stepInstance;
+        }
+
+        protected ProcessStepInstance<T> ConditionStep(string stepTitle, string stepId)
+        {
+            return Step(stepTitle, ProcessStepTypeEnum.Condition, stepId);
         }
     }
 }

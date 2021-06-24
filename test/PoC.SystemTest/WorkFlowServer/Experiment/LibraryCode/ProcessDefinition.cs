@@ -11,16 +11,16 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 {
     public abstract class ProcessDefinition<T> : IDisposable
     {
-        public ProcessVersionCollection<T> ProcessVersions { get;  } = new ProcessVersionCollection<T>();
-        public string ProcessName { get; }
-        public string ProcessId { get; }
+        public string Id { get; }
+        public string Title { get; }
+        public ProcessVersionCollection<T> ProcessVersions { get; } = new ProcessVersionCollection<T>();
 
-        protected ProcessDefinition(string processName, string processId)
+        protected ProcessDefinition(string title, string id)
         {
-            ProcessName = processName;
-            ProcessId = processId;
+            Title = title;
+            Id = id;
         }
-        
+
         public Task<T> ExecuteAsync(string instanceTitle, CancellationToken cancellationToken, params object[] arguments)
         {
             // TODO: If this is an instance that already exists, find the corresponding version.
@@ -36,7 +36,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
 
             return ExecuteAsync(version, instanceTitle, cancellationToken, arguments);
         }
-        
+
         public async Task<T> ExecuteAsync(ProcessVersion<T> version, string instanceTitle, CancellationToken cancellationToken, params object[] arguments)
         {
             // TODO: Verify arguments with Parameters
@@ -65,6 +65,9 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
                 throw;
             }
         }
+
+        /// <inheritdoc />
+        public override string ToString() => $"{Title} ({Id})";
 
         public void Dispose()
         {
