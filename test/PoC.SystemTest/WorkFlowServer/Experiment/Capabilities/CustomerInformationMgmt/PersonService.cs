@@ -11,7 +11,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformat
 
         public PersonService()
         {
-            _createProcess = new CreatePersonProcess(null);
+            _createProcess = new CreatePersonProcess(null, null);
         }
         /// <inheritdoc />
         public Task<Person> ReadAsync(string id, CancellationToken token = new CancellationToken())
@@ -29,6 +29,24 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformat
 
         /// <inheritdoc />
         public Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task<Person> GetOfficialInformationAsync(Person person, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public async Task<Person> AskUserToFillInDetailsAsync(Person person, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> ValidateAsync(Person person, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
