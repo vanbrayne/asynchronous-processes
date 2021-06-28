@@ -6,12 +6,12 @@ using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 namespace PoC.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class PersonsController : ControllerBase, IPersonService
+    [Route("Adapter/Persons")]
+    public class AdapterPersonsController : ControllerBase, IPersonService
     {
         private readonly ICustomerInformationMgmtCapability _capability;
 
-        public PersonsController(ICustomerInformationMgmtCapability capability)
+        public AdapterPersonsController(ICustomerInformationMgmtCapability capability)
         {
             _capability = capability;
         }
@@ -38,6 +38,7 @@ namespace PoC.API.Controllers
         }
 
         /// <inheritdoc />
+        [HttpPost("OfficialInformation")]
         public Task<Person> GetOfficialInformationAsync(Person person, CancellationToken cancellationToken = default)
         {
             return _capability.Person.GetOfficialInformationAsync(person, cancellationToken);
@@ -51,6 +52,7 @@ namespace PoC.API.Controllers
         }
 
         /// <inheritdoc />
+        [HttpPost("{id}/Validate")]
         public  Task<bool> ValidateAsync(Person person, CancellationToken cancellationToken)
         {
             return _capability.Person.ValidateAsync(person, cancellationToken);

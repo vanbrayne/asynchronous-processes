@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PoC.API.RestClients.CommunicationMgmtCapability;
+using PoC.API.RestClients.CustomerInformationMgmt;
 using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
-using PoC.Example.Capabilities.CommunicationMgmtCapability;
-using PoC.Example.Capabilities.CustomerInformationMgmt;
 
 namespace PoC.API
 {

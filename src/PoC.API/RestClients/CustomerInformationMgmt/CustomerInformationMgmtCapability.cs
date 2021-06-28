@@ -1,15 +1,14 @@
-﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
+﻿using Nexus.Link.Libraries.Web.RestClientHelper;
+using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
-using PoC.Example.Capabilities.CustomerInformationMgmt.CreatePersonProcess;
-using PoC.Example.Persistence;
 
-namespace PoC.Example.Capabilities.CustomerInformationMgmt
+namespace PoC.API.RestClients.CustomerInformationMgmt
 {
     public class CustomerInformationMgmtCapability : ICustomerInformationMgmtCapability
     {
         public CustomerInformationMgmtCapability(ICommunicationMgmtCapability communicationMgmtCapability)
         {
-            Person = new PersonService(new CreatePersonProcessDefinition(this, communicationMgmtCapability), new PersonTable());
+            Person = new PersonService(new HttpSender("http://localhost:6310/Persons"));
         }
 
         /// <inheritdoc />
