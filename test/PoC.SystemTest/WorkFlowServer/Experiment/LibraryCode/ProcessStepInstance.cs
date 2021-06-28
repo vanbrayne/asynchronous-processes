@@ -10,6 +10,9 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
     public delegate Task<TMethodReturnType> StepActionMethod<TProcessReturnType, TMethodReturnType>(
         ProcessStepInstance<TProcessReturnType> stepInstance,
         CancellationToken cancellationToken);
+    public delegate Task StepActionMethod<TProcessReturnType>(
+        ProcessStepInstance<TProcessReturnType> stepInstance,
+        CancellationToken cancellationToken);
 
     public class ProcessStepInstance<TProcessReturnType>
     {
@@ -37,7 +40,15 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
         public Task<TMethodReturnType> ExecuteAsync<TMethodReturnType>(StepActionMethod<TProcessReturnType, TMethodReturnType> method, CancellationToken cancellationToken, params object[] arguments)
         {
             InternalContract.Require(_processStep.StepType == ProcessStepTypeEnum.Action || _processStep.StepType == ProcessStepTypeEnum.Loop,
-            $"The step {_processStep} was declared as {_processStep.StepType}, so you can't call {nameof(ExecuteAsync)}.");
+                $"The step {_processStep} was declared as {_processStep.StepType}, so you can't call {nameof(ExecuteAsync)}.");
+
+            return InternalExecuteAsync(method, cancellationToken, arguments);
+        }
+
+        public Task ExecuteAsync(StepActionMethod<TProcessReturnType> method, CancellationToken cancellationToken, params object[] arguments)
+        {
+            InternalContract.Require(_processStep.StepType == ProcessStepTypeEnum.Action || _processStep.StepType == ProcessStepTypeEnum.Loop,
+                $"The step {_processStep} was declared as {_processStep.StepType}, so you can't call {nameof(ExecuteAsync)}.");
 
             return InternalExecuteAsync(method, cancellationToken, arguments);
         }
@@ -60,6 +71,27 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
                 // TODO: Update the DB StepInstance with FinishedAt
                 // TODO: Create/update LatestResponse in DB
                 return result;
+            }
+            catch (PostponeException e)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                // TODO: Smart error handling
+                throw;
+            }
+        }
+
+        private async Task InternalExecuteAsync(StepActionMethod<TProcessReturnType> method, CancellationToken cancellationToken, params object[] arguments)
+        {
+            // TODO: Create/update LatestRequest in DB
+            // TODO: Create/update Arguments in DB
+            try
+            {
+                await method(this, cancellationToken);
+                // TODO: Update the DB StepInstance with FinishedAt
+                // TODO: Create/update LatestResponse in DB
             }
             catch (PostponeException e)
             {

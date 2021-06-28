@@ -13,12 +13,13 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
     {
         public string Id { get; }
         public string Title { get; }
-        public ProcessVersionCollection<T> ProcessVersions { get; } = new ProcessVersionCollection<T>();
+        public ProcessVersionCollection<T> ProcessVersions { get; }
 
         protected ProcessDefinition(string title, string id)
         {
             Title = title;
             Id = id;
+            ProcessVersions = new ProcessVersionCollection<T>(this);
         }
 
         public Task<T> ExecuteAsync(string instanceTitle, CancellationToken cancellationToken, params object[] arguments)
