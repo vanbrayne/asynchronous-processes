@@ -2,6 +2,6 @@
 {
     public interface ICommunicationMgmtCapability
     {
-        IEmailService Email { get; set; }
+        IEmailService Email { get; }
     }
 }

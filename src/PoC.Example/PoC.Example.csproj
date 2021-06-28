@@ -9,9 +9,4 @@
     <ProjectReference Include="..\PoC.LinkLibraries\PoC.LinkLibraries.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Capabilities\CommunicationMgmtCapability\" />
-    <Folder Include="Capabilities\CustomerInformationMgmt\" />
-  </ItemGroup>
-
 </Project>

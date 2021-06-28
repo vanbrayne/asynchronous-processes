@@ -2,6 +2,6 @@
 {
     public interface ICustomerInformationMgmtCapability
     {
-        IPersonService Person { get; set; }
+        IPersonService Person { get; }
     }
 }
