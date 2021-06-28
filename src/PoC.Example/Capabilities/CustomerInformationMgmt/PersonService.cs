@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
-using PoC.Example.Example;
 using PoC.LinkLibraries.LibraryCode;
 
 namespace PoC.Example.Capabilities.CustomerInformationMgmt

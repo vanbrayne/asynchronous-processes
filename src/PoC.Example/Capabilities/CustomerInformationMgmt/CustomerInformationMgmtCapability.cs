@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
+﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
-using PoC.Example.Example;
+using PoC.Example.Capabilities.CustomerInformationMgmt.CreatePersonProcess;
 
 namespace PoC.Example.Capabilities.CustomerInformationMgmt
 {
@@ -11,7 +8,7 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
     {
         public CustomerInformationMgmtCapability(ICommunicationMgmtCapability communicationMgmtCapability)
         {
-            Person = new PersonService(new CreatePersonProcess(this, communicationMgmtCapability));
+            Person = new PersonService(new CreatePersonProcessDefinition(this, communicationMgmtCapability));
         }
 
         /// <inheritdoc />

@@ -3,26 +3,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Core.Error.Logic;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
-using PoC.Example.Capabilities.CustomerInformationMgmt;
 using PoC.LinkLibraries.LibraryCode;
 
-namespace PoC.Example.Example
+namespace PoC.Example.Capabilities.CustomerInformationMgmt.CreatePersonProcess
 {
-    public class InitializePersonProcessV2 : ProcessInstance<Person>
+    public class CreatePersonProcessV2 : ProcessInstance<Person>
     {
         private Person _initialPerson;
-        private Person _personSoFar;
 
-        public new CreatePersonProcess ProcessDefinition => (CreatePersonProcess)base.ProcessDefinition;
+        public new CreatePersonProcessDefinition ProcessDefinition => (CreatePersonProcessDefinition)base.ProcessDefinition;
 
-        private InitializePersonProcessV2(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
+        private CreatePersonProcessV2(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
             : base(processVersion, instanceName, arguments)
         {
         }
 
-        public new static InitializePersonProcessV2 CreateInstance(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
+        public new static CreatePersonProcessV2 CreateInstance(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
         {
-            return new InitializePersonProcessV2(processVersion, instanceName, arguments);
+            return new CreatePersonProcessV2(processVersion, instanceName, arguments);
         }
 
         public override async Task<Person> ExecuteAsync(CancellationToken cancellationToken)
@@ -67,7 +65,7 @@ namespace PoC.Example.Example
             //    taskList.Add(task);
             //}
 
-            return _personSoFar;
+            return correctedPerson;
         }
 
         private async Task InformPlayers(ProcessStepInstance<Person> loopStepInstance, CancellationToken cancellationToken)
