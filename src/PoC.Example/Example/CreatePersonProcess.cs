@@ -1,8 +1,8 @@
-﻿using PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CommunicationMgmtCapability;
-using PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformationMgmt;
-using PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode;
+﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
+using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
+using PoC.LinkLibraries.LibraryCode;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
+namespace PoC.Example.Example
 {
     public class CreatePersonProcess : ProcessDefinition<Person>
     {

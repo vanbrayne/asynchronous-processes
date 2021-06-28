@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformationMgmt
+namespace PoC.Example.Abstract.Capabilities.CustomerInformationMgmt
 {
     public class Person
     {

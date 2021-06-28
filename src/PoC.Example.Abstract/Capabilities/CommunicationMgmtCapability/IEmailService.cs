@@ -1,8 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Nexus.Link.Libraries.Crud.Interfaces;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CommunicationMgmtCapability
+namespace PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability
 {
     public interface IEmailService
     {

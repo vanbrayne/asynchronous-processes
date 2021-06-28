@@ -1,4 +1,4 @@
-﻿namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CommunicationMgmtCapability
+﻿namespace PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability
 {
     public interface ICommunicationMgmtCapability
     {

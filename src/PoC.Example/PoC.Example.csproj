@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PoC.Example.Abstract\PoC.Example.Abstract.csproj" />
+    <ProjectReference Include="..\PoC.LinkLibraries\PoC.LinkLibraries.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Capabilities\CommunicationMgmtCapability\" />
+    <Folder Include="Capabilities\CustomerInformationMgmt\" />
+  </ItemGroup>
+
+</Project>

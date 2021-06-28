@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Nexus.Link.Libraries.Core.Assert;
 using PoC.AM.Abstract.Exceptions;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
+namespace PoC.LinkLibraries.LibraryCode
 {
     public delegate Task<TMethodReturnType> StepActionMethod<TProcessReturnType, TMethodReturnType>(
         ProcessStepInstance<TProcessReturnType> stepInstance,

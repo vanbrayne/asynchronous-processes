@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformationMgmt;
+using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
+namespace PoC.Example.Example
 {
     public class ExampleController
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
+namespace PoC.LinkLibraries.LibraryCode
 {
     public delegate Task<T> ProcessMethod<T>(ProcessInstance<T> processInstance, CancellationToken cancellationToken);
     public class ProcessVersion<T>

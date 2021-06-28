@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Core.Error.Logic;
-using PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformationMgmt;
-using PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode;
+using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
+using PoC.LinkLibraries.LibraryCode;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
+namespace PoC.Example.Example
 {
     public class InitializePersonProcessV2 : ProcessInstance<Person>
     {
@@ -157,7 +156,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Example
         {
             var inPerson = (Person)stepInstance.Arguments["Person"];
             var person =
-                await ProcessDefinition.CustomerInformationMgmt.Person.AskUserToFillInDetailsAsync(inPerson, cancellationToken);
+                await ProcessDefinition.CustomerInformationMgmt.Person.AskUserToFillInDetailsAsync(inPerson.Id, inPerson, cancellationToken);
             return person;
         }
     }

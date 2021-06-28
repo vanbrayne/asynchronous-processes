@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
+namespace PoC.LinkLibraries.LibraryCode
 {
     public enum ProcessStepTypeEnum
     {

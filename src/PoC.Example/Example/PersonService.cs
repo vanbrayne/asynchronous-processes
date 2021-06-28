@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using PoC.SystemTest.WorkFlowServer.Experiment.Example;
+using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformationMgmt
+namespace PoC.Example.Example
 {
     public class PersonService : IPersonService
     {
@@ -14,7 +14,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformat
             _createProcess = new CreatePersonProcess(null, null);
         }
         /// <inheritdoc />
-        public Task<Person> ReadAsync(string id, CancellationToken token = new CancellationToken())
+        public Task<Person> ReadAsync(string id, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new Person());
         }
@@ -40,7 +40,7 @@ namespace PoC.SystemTest.WorkFlowServer.Experiment.Capabilities.CustomerInformat
         }
 
         /// <inheritdoc />
-        public async Task<Person> AskUserToFillInDetailsAsync(Person person, CancellationToken cancellationToken)
+        public async Task<Person> AskUserToFillInDetailsAsync(string id, Person person, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

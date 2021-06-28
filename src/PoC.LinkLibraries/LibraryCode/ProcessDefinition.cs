@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Nexus.Link.Libraries.Core.Application;
 using Nexus.Link.Libraries.Core.Assert;
-using Nexus.Link.Libraries.Core.Error.Logic;
 using PoC.AM.Abstract.Exceptions;
-using PoC.SystemTest.WorkFlowServer.Experiment.Example;
 
-namespace PoC.SystemTest.WorkFlowServer.Experiment.LibraryCode
+namespace PoC.LinkLibraries.LibraryCode
 {
     public abstract class ProcessDefinition<T> : IDisposable
     {
