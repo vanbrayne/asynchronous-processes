@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Core.Error.Logic;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
+using PoC.Example.Capabilities.CustomerInformationMgmt;
 using PoC.LinkLibraries.LibraryCode;
 
 namespace PoC.Example.Example

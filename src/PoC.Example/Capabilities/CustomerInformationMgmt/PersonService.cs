@@ -3,16 +3,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 using PoC.Example.Example;
+using PoC.LinkLibraries.LibraryCode;
 
 namespace PoC.Example.Capabilities.CustomerInformationMgmt
 {
     public class PersonService : IPersonService
     {
-        private readonly CreatePersonProcess _createProcess;
+        private readonly ProcessDefinition<Person> _createPersonProcess;
 
-        public PersonService()
+        public PersonService(ProcessDefinition<Person> createPersonProcess)
         {
-            _createProcess = new CreatePersonProcess(null, null);
+            _createPersonProcess = createPersonProcess;
         }
         /// <inheritdoc />
         public Task<Person> ReadAsync(string id, CancellationToken cancellationToken = default)
@@ -24,7 +25,7 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
         public async Task<string> CreateAsync(Person item, CancellationToken cancellationToken = default)
         {
             // TODO: Always use latest version
-            var person = await _createProcess.ExecuteAsync($"{item.EmailAddress}", cancellationToken, item.PersonalNumber, item.EmailAddress);
+            var person = await _createPersonProcess.ExecuteAsync($"{item.EmailAddress}", cancellationToken, item.PersonalNumber, item.EmailAddress);
             return person.Id;
         }
 

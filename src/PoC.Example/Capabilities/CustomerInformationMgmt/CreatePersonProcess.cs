@@ -1,8 +1,9 @@
 ﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
+using PoC.Example.Example;
 using PoC.LinkLibraries.LibraryCode;
 
-namespace PoC.Example.Example
+namespace PoC.Example.Capabilities.CustomerInformationMgmt
 {
     public class CreatePersonProcess : ProcessDefinition<Person>
     {
