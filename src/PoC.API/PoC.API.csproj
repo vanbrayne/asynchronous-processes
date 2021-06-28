@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PoC.Example.Abstract\PoC.Example.Abstract.csproj" />
+    <ProjectReference Include="..\PoC.Example\PoC.Example.csproj" />
   </ItemGroup>
 
 

@@ -10,6 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
+using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
+using PoC.Example.Capabilities.CommunicationMgmtCapability;
+using PoC.Example.Capabilities.CustomerInformationMgmt;
 
 namespace PoC.API
 {
@@ -26,6 +30,8 @@ namespace PoC.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<ICustomerInformationMgmtCapability, CustomerInformationMgmtCapability>();
+            services.AddScoped<ICommunicationMgmtCapability, CommunicationMgmtCapability>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
