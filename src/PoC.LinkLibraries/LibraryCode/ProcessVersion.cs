@@ -14,7 +14,19 @@ namespace PoC.LinkLibraries.LibraryCode
         {
             ProcessDefinition = processDefinition;
         }
-        public Dictionary<int, string> Parameters { get;  } = new Dictionary<int, string>();
+
+        private readonly Dictionary<int, MethodParameter> _parameters = new Dictionary<int, MethodParameter>();
+
+        public void AddParameter<TParameter>(string name)
+        {
+            var position = _parameters.Count + 1;
+            _parameters.Add(position, new MethodParameter(name, typeof(TParameter)));
+        }
+
+        public MethodParameter GetParameter(int position)
+        {
+            return _parameters[position];
+        }
         public int MajorVersion { get; set; }
         public int MinorVersion { get; set; }
         public Type Type { get; set; }

@@ -21,10 +21,7 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability
             //var version = Versions.Add(1, 2, Version1Async); 
             //version.Parameters.Add("personalNumber");
             var version = ProcessVersions.Add<CreatePersonProcessV2>(2, 1);
-            // TODO: Make Parameters a class and change Add to Register(string parameterName, Type parameterType)
-            // TODO: NO need for numbers, they are sequential
-            version.Parameters.Add(1, "Person");
-
+            version.AddParameter<Person>("Person");
         }
     }
 }

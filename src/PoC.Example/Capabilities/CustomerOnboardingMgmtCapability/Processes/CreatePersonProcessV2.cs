@@ -27,7 +27,7 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
         public override async Task<Person> ExecuteAsync(CancellationToken cancellationToken)
         {
             // TODO: Type check the argument vs. the cast type
-            _initialPerson = (Person)Arguments["Person"];
+            _initialPerson = GetArgument<Person>("Person");
 
             // 1. Action: Get person
             // TODO: Define parameters
@@ -127,7 +127,7 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
 
         private async Task<Person> AskUserToCorrectTheirInformationAsync(ProcessStepInstance<Person> loopStepInstance, CancellationToken cancellationToken)
         {
-            var inPerson = (Person)Arguments["Person"];
+            var inPerson = (Person)loopStepInstance.Arguments["Person"];
             bool isValid;
             var count = 0;
             Person personDetailsFromUser;

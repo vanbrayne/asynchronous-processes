@@ -1,28 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Nexus.Link.Libraries.Core.Assert;
+using Nexus.Link.Libraries.Core.Misc;
 
 namespace PoC.LinkLibraries.LibraryCode
 {
     public abstract class ProcessInstance<T>
     {
+        private readonly Dictionary<string, MethodArgument> _arguments = new Dictionary<string, MethodArgument>();
+
         public static ProcessInstance<T> CreateInstance(ProcessVersion<T> processVersion, string instanceName, object[] arguments)
         {
             throw new NotImplementedException($"You should create your own factory method with the same signature in your class.");
         }
 
         public ProcessVersion<T> ProcessVersion { get; }
+        public string Title { get; }
 
         public ProcessDefinition<T> ProcessDefinition => ProcessVersion.ProcessDefinition;
 
         protected ProcessInstance(ProcessVersion<T> processVersion, string instanceTitle, params object[] arguments)
         {
             ProcessVersion = processVersion;
-            // TODO: Set the arguments: Parameters.SetArguments(arguments);
+            Title = instanceTitle;
+            var position = 0;
+            foreach (var value in arguments)
+            {
+                position++;
+                var parameter = ProcessVersion.GetParameter(position);
+                SetArgument(parameter, value);
+            }
         }
 
-        public Dictionary<string, object> Arguments { get; } = new Dictionary<string, object>();
+        public void SetArgument(MethodParameter parameter, object value)
+        {
+            if (value == null)
+            {
+                InternalContract.Require(parameter.IsNullable, 
+                    $"The parameter {parameter} does not accept the value null.");
+            }
+            else
+            {
+                InternalContract.Require(parameter.Type.IsInstanceOfType(value), 
+                    $"Expected {nameof(value)} to be an instance of type {parameter.Type.FullName}, but was of type {value.GetType().FullName}.");
+            }
+            
+            var argument = new MethodArgument(parameter, value);
+            _arguments.Add(parameter.Name, argument);
+        }
+
+        public object GetArgument(string parameterName)
+        {
+            if (!_arguments.TryGetValue(parameterName, out var argument))
+            {
+                var argumentParameters = string.Join(", ", _arguments.Values.Select(a => a.Parameter.Name));
+                InternalContract.Fail($"The process {ProcessVersion} has a parameter named {parameterName}, but this instance {Title} had no argument for that parameter. Found these: {argumentParameters}");
+                return default;
+            }
+
+            FulcrumAssert.IsTrue(argument.Parameter.Type.IsInstanceOfType(argument.Value), CodeLocation.AsString());
+
+            return argument.Value;
+        }
+
+        public TArgument GetArgument<TArgument>(string parameterName)
+        {
+            return (TArgument) GetArgument(parameterName);
+        }
 
         public abstract Task<T> ExecuteAsync(CancellationToken cancellationToken);
 
