@@ -3,5 +3,7 @@
     public interface ICustomerInformationMgmtCapability
     {
         IPersonService Person { get; }
+
+        ICreatePersonProcess CreatePersonProcess { get; }
     }
 }

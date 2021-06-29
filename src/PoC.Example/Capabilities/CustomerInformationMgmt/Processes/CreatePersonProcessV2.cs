@@ -2,16 +2,17 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Core.Error.Logic;
+using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 using PoC.LinkLibraries.LibraryCode;
 
-namespace PoC.Example.Capabilities.CustomerInformationMgmt.CreatePersonProcess
+namespace PoC.Example.Capabilities.CustomerInformationMgmt.Processes
 {
     public class CreatePersonProcessV2 : ProcessInstance<Person>
     {
         private Person _initialPerson;
 
-        public new CreatePersonProcessDefinition ProcessDefinition => (CreatePersonProcessDefinition)base.ProcessDefinition;
+        public new CreatePersonProcess Process => (CreatePersonProcess)base.ProcessDefinition;
 
         private CreatePersonProcessV2(ProcessVersion<Person> processVersion, string instanceName, object[] arguments)
             : base(processVersion, instanceName, arguments)
@@ -84,14 +85,16 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt.CreatePersonProcess
             var inPerson = (Person)loopStepInstance.Arguments["Person"];
             var player = (Person)loopStepInstance.Arguments["Player"];
 
-            return ProcessDefinition.CommunicationMgmt.Email.SendEmailAsync(player.EmailAddress, "You have a new fan!",
-                $"{inPerson.Name} has you as one of their favorite players!", cancellationToken);
+            return Process.CommunicationMgmt.Email.SendEmailAsync(
+                new Email(player.EmailAddress, "You have a new fan!",
+                $"{inPerson.Name} has mentioned you as one of their favorite players!"),
+                cancellationToken);
         }
 
         private async Task<Person> GetPersonActionAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
             var inPerson = (Person)stepInstance.Arguments["Person"];
-            var person = await ProcessDefinition.CustomerInformationMgmt.Person.GetByPersonalNumberAsync(_initialPerson.PersonalNumber, cancellationToken);
+            var person = await Process.CustomerInformationMgmt.Person.GetByPersonalNumberAsync(_initialPerson.PersonalNumber, cancellationToken);
             return person;
         }
 
@@ -106,7 +109,7 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt.CreatePersonProcess
             var inPerson = (Person)stepInstance.Arguments["Person"];
             try
             {
-                var personDataTemplate = await ProcessDefinition.CustomerInformationMgmt.Person.GetOfficialInformationAsync(inPerson, cancellationToken);
+                var personDataTemplate = await Process.CustomerInformationMgmt.Person.GetOfficialInformationAsync(inPerson, cancellationToken);
                 return personDataTemplate ?? inPerson;
             }
             // TODO: Take care of time outs
@@ -147,7 +150,7 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt.CreatePersonProcess
         private async Task<bool> VerifyUserInput(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
             var inPerson = (Person)stepInstance.Arguments["Person"];
-            var ok = await ProcessDefinition.CustomerInformationMgmt.Person.ValidateAsync(inPerson, cancellationToken);
+            var ok = await Process.CustomerInformationMgmt.Person.ValidateAsync(inPerson, cancellationToken);
             return ok;
         }
 
@@ -155,7 +158,7 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt.CreatePersonProcess
         {
             var inPerson = (Person)stepInstance.Arguments["Person"];
             var person =
-                await ProcessDefinition.CustomerInformationMgmt.Person.AskUserToFillInDetailsAsync(inPerson.Id, inPerson, cancellationToken);
+                await Process.CustomerInformationMgmt.Person.AskUserToFillInDetailsAsync(inPerson.Id, inPerson, cancellationToken);
             return person;
         }
     }

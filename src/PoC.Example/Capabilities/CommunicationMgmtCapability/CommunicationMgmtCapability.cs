@@ -1,4 +1,4 @@
-﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
+﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 
 namespace PoC.Example.Capabilities.CommunicationMgmtCapability
 {

@@ -1,4 +1,4 @@
-﻿namespace PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability
+﻿namespace PoC.Example.Abstract.Capabilities.CommunicationMgmt
 {
     public interface ICommunicationMgmtCapability
     {

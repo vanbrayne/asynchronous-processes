@@ -1,15 +1,16 @@
-﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
+﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
+using PoC.Example.Capabilities.CustomerInformationMgmt.Processes;
 using PoC.LinkLibraries.LibraryCode;
 
-namespace PoC.Example.Capabilities.CustomerInformationMgmt.CreatePersonProcess
+namespace PoC.Example.Capabilities.CustomerInformationMgmt
 {
-    public class CreatePersonProcessDefinition : ProcessDefinition<Person>
+    public class CreatePersonProcess : ProcessDefinition<Person>, ICreatePersonProcess
     {
         public ICustomerInformationMgmtCapability CustomerInformationMgmt { get; }
         public ICommunicationMgmtCapability CommunicationMgmt { get; set; }
 
-        public CreatePersonProcessDefinition(ICustomerInformationMgmtCapability customerInformationMgmt, ICommunicationMgmtCapability communicationMgmt)
+        public CreatePersonProcess(ICustomerInformationMgmtCapability customerInformationMgmt, ICommunicationMgmtCapability communicationMgmt)
         : base("Initialize person", "81B696D3-E27A-4CA8-9DC1-659B78DFE474")
         {
             CustomerInformationMgmt = customerInformationMgmt;

@@ -6,9 +6,9 @@ using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 
 namespace PoC.API.RestClients.CustomerInformationMgmt
 {
-    public class PersonService : CrudRestClient<Person, string>, IPersonService
+    public class PersonRestClient : CrudRestClient<Person, string>, IPersonService
     {
-        public PersonService(HttpSender httpSender)
+        public PersonRestClient(IHttpSender httpSender)
             : base(httpSender)
         {
         }

@@ -1,13 +1,13 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
+using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 
 namespace PoC.Example.Capabilities.CommunicationMgmtCapability
 {
     public class EmailService : IEmailService
     {
         /// <inheritdoc />
-        public async Task SendEmailAsync(string emailAddress, string subject, string message, CancellationToken cancellationToken = default)
+        public Task SendEmailAsync(Email email, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }

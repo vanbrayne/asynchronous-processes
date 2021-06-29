@@ -6,10 +6,12 @@
 
   <ItemGroup>
     <PackageReference Include="Nexus.Link.Libraries.Crud.Web" Version="2.4.1" />
+    <PackageReference Include="Nexus.Link.Libraries.Web.AspNet" Version="2.24.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PoC.Example.Abstract\PoC.Example.Abstract.csproj" />
+    <ProjectReference Include="..\PoC.Example\PoC.Example.csproj" />
   </ItemGroup>
 
 

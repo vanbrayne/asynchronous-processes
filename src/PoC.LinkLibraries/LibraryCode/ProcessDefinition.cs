@@ -6,7 +6,7 @@ using PoC.AM.Abstract.Exceptions;
 
 namespace PoC.LinkLibraries.LibraryCode
 {
-    public abstract class ProcessDefinition<T> : IDisposable
+    public abstract class ProcessDefinition<T> : IDisposable, IProcessDefinition<T>
     {
         public string Id { get; }
         public string Title { get; }
@@ -35,7 +35,7 @@ namespace PoC.LinkLibraries.LibraryCode
             return ExecuteAsync(version, instanceTitle, cancellationToken, arguments);
         }
 
-        public async Task<T> ExecuteAsync(ProcessVersion<T> version, string instanceTitle, CancellationToken cancellationToken, params object[] arguments)
+        protected async Task<T> ExecuteAsync(ProcessVersion<T> version, string instanceTitle, CancellationToken cancellationToken, params object[] arguments)
         {
             // TODO: Verify arguments with Parameters
 

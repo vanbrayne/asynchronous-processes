@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
+using Nexus.Link.Libraries.Web.AspNet.Pipe.RespondAsync;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 
 namespace PoC.API.Controllers
 {
     [ApiController]
-    [Route("Adapter/Persons")]
-    public class AdapterPersonsController : ControllerBase, IPersonService
+    [Route("Persons")]
+    public class PersonsController : ControllerBase, IPersonService
     {
         private readonly ICustomerInformationMgmtCapability _capability;
 
-        public AdapterPersonsController(ICustomerInformationMgmtCapability capability)
+        public PersonsController(ICustomerInformationMgmtCapability capability)
         {
             _capability = capability;
         }
@@ -25,9 +26,10 @@ namespace PoC.API.Controllers
 
         /// <inheritdoc />
         [HttpPost("")]
-        public Task<string> CreateAsync(Person item, CancellationToken cancellationToken = default)
+        [RespondAsync(RespondAsyncOpinionEnum.Always)]
+        public Task<Person> CreateAndReturnAsync(Person item, CancellationToken cancellationToken = default)
         {
-            return _capability.Person.CreateAsync(item, cancellationToken);
+            return _capability.Person.CreateAndReturnAsync(item, cancellationToken);
         }
 
         /// <inheritdoc />

@@ -1,18 +1,21 @@
-﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmtCapability;
+﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
-using PoC.Example.Capabilities.CustomerInformationMgmt.CreatePersonProcess;
 using PoC.Example.Persistence;
 
 namespace PoC.Example.Capabilities.CustomerInformationMgmt
 {
     public class CustomerInformationMgmtCapability : ICustomerInformationMgmtCapability
     {
-        public CustomerInformationMgmtCapability(ICommunicationMgmtCapability communicationMgmtCapability)
+        public CustomerInformationMgmtCapability(ICommunicationMgmtCapability communicationMgmtCapability, ICreatePersonProcess createPersonProcess)
         {
-            Person = new PersonService(new CreatePersonProcessDefinition(this, communicationMgmtCapability), new PersonTable());
+            CreatePersonProcess = createPersonProcess;
+            Person = new PersonService(this, new PersonTable());
         }
 
         /// <inheritdoc />
         public IPersonService Person { get; }
+
+        /// <inheritdoc />
+        public ICreatePersonProcess CreatePersonProcess { get; }
     }
 }
