@@ -33,7 +33,6 @@ namespace PoC.API
             var httpSender = new HttpSender("https://localhost:44308/");
             var comRestClient = new CommunicationMgmtRestClient(httpSender);
             var cimRestClient = new CustomerInformationMgmtRestClient(httpSender, comRestClient);
-            services.AddSingleton(cimRestClient.CreatePersonProcess);
             services.AddSingleton<ICustomerInformationMgmtCapability, CustomerInformationMgmtCapability>();
             services.AddSingleton<ICommunicationMgmtCapability, CommunicationMgmtCapability>();
         }

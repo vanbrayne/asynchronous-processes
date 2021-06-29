@@ -26,15 +26,15 @@ namespace PoC.API.RestClients.CustomerInformationMgmt
         }
 
         /// <inheritdoc />
-        public Task<Person> AskUserToFillInDetailsAsync(string id, Person person, CancellationToken cancellationToken)
+        public Task<Person> AskUserToFillInDetailsAsync(Person person, CancellationToken cancellationToken)
         {
-            return PostAndReturnCreatedObjectAsync($"{id}/AskForDetails", person, null, cancellationToken);
+            return PostAndReturnCreatedObjectAsync("AskForDetails", person, null, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<bool> ValidateAsync(Person person, CancellationToken cancellationToken)
         {
-            return PostAsync<bool, Person>($"{person.Id}/Validate", person, null, cancellationToken);
+            return PostAsync<bool, Person>("Validate", person, null, cancellationToken);
         }
     }
 }

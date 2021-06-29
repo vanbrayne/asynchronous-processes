@@ -9,7 +9,7 @@ namespace PoC.Example.Abstract.Capabilities.CustomerInformationMgmt
         Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default);
         Task<Person> GetOfficialInformationAsync(Person person, CancellationToken cancellationToken = default);
 
-        Task<Person> AskUserToFillInDetailsAsync(string id, Person person, CancellationToken cancellationToken);
+        Task<Person> AskUserToFillInDetailsAsync(Person person, CancellationToken cancellationToken);
         Task<bool> ValidateAsync(Person person, CancellationToken cancellationToken);
     }
 }

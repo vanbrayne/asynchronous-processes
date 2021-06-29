@@ -6,16 +6,12 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
 {
     public class CustomerInformationMgmtCapability : ICustomerInformationMgmtCapability
     {
-        public CustomerInformationMgmtCapability(ICommunicationMgmtCapability communicationMgmtCapability, ICreatePersonProcess createPersonProcess)
+        public CustomerInformationMgmtCapability(ICommunicationMgmtCapability communicationMgmtCapability)
         {
-            CreatePersonProcess = createPersonProcess;
-            Person = new PersonService(this, new PersonTable());
+            Person = new PersonService(this, new PersonTable(), communicationMgmtCapability);
         }
 
         /// <inheritdoc />
         public IPersonService Person { get; }
-
-        /// <inheritdoc />
-        public ICreatePersonProcess CreatePersonProcess { get; }
     }
 }

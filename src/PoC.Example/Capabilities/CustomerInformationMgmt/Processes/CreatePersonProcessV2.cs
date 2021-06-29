@@ -158,7 +158,7 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt.Processes
         {
             var inPerson = (Person)stepInstance.Arguments["Person"];
             var person =
-                await Process.CustomerInformationMgmt.Person.AskUserToFillInDetailsAsync(inPerson.Id, inPerson, cancellationToken);
+                await Process.CustomerInformationMgmt.Person.AskUserToFillInDetailsAsync(inPerson, cancellationToken);
             return person;
         }
     }

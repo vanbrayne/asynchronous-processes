@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 using PoC.Example.Persistence;
 
@@ -9,14 +10,16 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
     public class PersonService : IPersonService
     {
         private readonly ICustomerInformationMgmtCapability _capability;
+        private ICreatePersonProcess _createPersonProcess;
         private readonly IPersonTable _personTable;
         private Person _player1;
         private Person _player2;
         private Person _player3;
 
-        public PersonService(ICustomerInformationMgmtCapability capability, IPersonTable personTable)
+        public PersonService(ICustomerInformationMgmtCapability capability, IPersonTable personTable, ICommunicationMgmtCapability communicationMgmtCapability)
         {
             _capability = capability;
+            _createPersonProcess = new CreatePersonProcess(capability, communicationMgmtCapability);
             _personTable = personTable;
             _player1 = new Person
             {
@@ -39,7 +42,7 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
         public async Task<Person> CreateAndReturnAsync(Person item, CancellationToken cancellationToken = default)
         {
             // TODO: Always use latest version
-            var person = await _capability.CreatePersonProcess.ExecuteAsync($"{item.EmailAddress}", cancellationToken, item);
+            var person = await _createPersonProcess.ExecuteAsync($"{item.EmailAddress}", cancellationToken, item);
             return await _personTable.CreateAndReturnAsync(person, cancellationToken);
         }
 
@@ -63,14 +66,14 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
         }
 
         /// <inheritdoc />
-        public Task<Person> AskUserToFillInDetailsAsync(string id, Person person, CancellationToken cancellationToken)
+        public Task<Person> AskUserToFillInDetailsAsync(Person person, CancellationToken cancellationToken)
         {
             person.FavoriteFootballPlayers.Add(_player1);
             person.FavoriteFootballPlayers.Add(_player3);
             return Task.FromResult(person);
         }
-
-        private static bool _validateResult = false;
+        
+        private bool _validateResult;
         /// <inheritdoc />
         public Task<bool> ValidateAsync(Person person, CancellationToken cancellationToken)
         {
