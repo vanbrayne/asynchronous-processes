@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Crud.Interfaces;
+using PoC.Example.Abstract.Capabilities.Common;
 
 namespace PoC.Example.Abstract.Capabilities.CustomerInformationMgmt
 {

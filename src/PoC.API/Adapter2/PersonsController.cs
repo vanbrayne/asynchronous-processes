@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nexus.Link.Libraries.Web.AspNet.Pipe.RespondAsync;
+using PoC.Example.Abstract.Capabilities.Common;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 
-namespace PoC.API.Controllers
+namespace PoC.API.Adapter2
 {
     [ApiController]
     [Route("Persons")]
@@ -35,7 +35,6 @@ namespace PoC.API.Controllers
 
         /// <inheritdoc />
         [HttpPost("")]
-        [RespondAsync(RespondAsyncOpinionEnum.Always)]
         public Task<Person> CreateAndReturnAsync(Person item, CancellationToken cancellationToken = default)
         {
             return _capability.Person.CreateAndReturnAsync(item, cancellationToken);

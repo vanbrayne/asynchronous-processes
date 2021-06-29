@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Crud.Web.RestClient;
 using Nexus.Link.Libraries.Web.RestClientHelper;
+using PoC.Example.Abstract.Capabilities.Common;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 
 namespace PoC.API.RestClients.CustomerInformationMgmt

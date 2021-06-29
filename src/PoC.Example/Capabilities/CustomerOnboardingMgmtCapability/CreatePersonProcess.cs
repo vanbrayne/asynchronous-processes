@@ -1,9 +1,11 @@
-﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
+﻿using PoC.Example.Abstract.Capabilities.Common;
+using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
-using PoC.Example.Capabilities.CustomerInformationMgmt.Processes;
+using PoC.Example.Abstract.Capabilities.CustomerOnboardingMgmt;
+using PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes;
 using PoC.LinkLibraries.LibraryCode;
 
-namespace PoC.Example.Capabilities.CustomerInformationMgmt
+namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability
 {
     public class CreatePersonProcess : ProcessDefinition<Person>, ICreatePersonProcess
     {

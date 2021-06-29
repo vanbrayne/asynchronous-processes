@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PoC.Example.Abstract.Capabilities.CustomerInformationMgmt
+namespace PoC.Example.Abstract.Capabilities.Common
 {
     public class Person
     {

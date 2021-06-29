@@ -10,8 +10,10 @@ using PoC.API.RestClients.CommunicationMgmtCapability;
 using PoC.API.RestClients.CustomerInformationMgmt;
 using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
+using PoC.Example.Abstract.Capabilities.CustomerOnboardingMgmt;
 using PoC.Example.Capabilities.CommunicationMgmtCapability;
 using PoC.Example.Capabilities.CustomerInformationMgmt;
+using PoC.Example.Capabilities.CustomerOnboardingMgmtCapability;
 using FulcrumApplicationHelper = Nexus.Link.Libraries.Web.AspNet.Application.FulcrumApplicationHelper;
 
 namespace PoC.API
@@ -31,9 +33,17 @@ namespace PoC.API
             FulcrumApplicationHelper.WebBasicSetup("asynchronous-processes", new Tenant("ignore", "local"), RunTimeLevelEnum.Development);
             services.AddControllers();
             var httpSender = new HttpSender("https://localhost:44308/");
-            var comRestClient = new CommunicationMgmtRestClient(httpSender);
-            var cimRestClient = new CustomerInformationMgmtRestClient(httpSender, comRestClient);
+
+            // Adapter1
+            var comCapabilityUsingRest = new CommunicationMgmtRestClient(httpSender);
+            var infoCapabilityUsingRest = new CustomerInformationMgmtRestClient(httpSender);
+            var onboarding = new CustomerOnboardingMgmtCapability(infoCapabilityUsingRest, comCapabilityUsingRest);
+            services.AddSingleton<ICustomerOnboardingMgmt>(onboarding);
+
+            // Adapter2
             services.AddSingleton<ICustomerInformationMgmtCapability, CustomerInformationMgmtCapability>();
+
+            // Adapter3
             services.AddSingleton<ICommunicationMgmtCapability, CommunicationMgmtCapability>();
         }
 

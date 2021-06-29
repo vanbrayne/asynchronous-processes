@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using PoC.Example.Abstract.Capabilities.Common;
 using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
+using PoC.Example.Abstract.Capabilities.CustomerOnboardingMgmt;
 using PoC.Example.Persistence;
+using IPersonService = PoC.Example.Abstract.Capabilities.CustomerInformationMgmt.IPersonService;
 
 namespace PoC.Example.Capabilities.CustomerInformationMgmt
 {
     public class PersonService : IPersonService
     {
         private readonly ICustomerInformationMgmtCapability _capability;
-        private ICreatePersonProcess _createPersonProcess;
         private readonly IPersonTable _personTable;
         private Person _player1;
         private Person _player2;
@@ -19,7 +21,6 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
         public PersonService(ICustomerInformationMgmtCapability capability, IPersonTable personTable, ICommunicationMgmtCapability communicationMgmtCapability)
         {
             _capability = capability;
-            _createPersonProcess = new CreatePersonProcess(capability, communicationMgmtCapability);
             _personTable = personTable;
             _player1 = new Person
             {
@@ -39,10 +40,8 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
         }
 
         /// <inheritdoc />
-        public async Task<Person> CreateAndReturnAsync(Person item, CancellationToken cancellationToken = default)
+        public async Task<Person> CreateAndReturnAsync(Person person, CancellationToken cancellationToken = default)
         {
-            // TODO: Always use latest version
-            var person = await _createPersonProcess.ExecuteAsync($"{item.EmailAddress}", cancellationToken, item);
             return await _personTable.CreateAndReturnAsync(person, cancellationToken);
         }
 

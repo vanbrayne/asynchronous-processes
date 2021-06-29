@@ -2,11 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Core.Error.Logic;
+using PoC.Example.Abstract.Capabilities.Common;
 using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
-using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 using PoC.LinkLibraries.LibraryCode;
 
-namespace PoC.Example.Capabilities.CustomerInformationMgmt.Processes
+namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
 {
     public class CreatePersonProcessV2 : ProcessInstance<Person>
     {
