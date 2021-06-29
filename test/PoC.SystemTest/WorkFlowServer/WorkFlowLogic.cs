@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using PoC.AM.Abstract;
 using PoC.AM.Abstract.Exceptions;
@@ -7,6 +6,7 @@ using PoC.AM.Abstract.Model;
 using PoC.LinkLibraries;
 using PoC.SystemTest.BusinessApiServer;
 using ExecutionContext = PoC.AM.Abstract.Model.ExecutionContext;
+using Person = PoC.Example.Abstract.Capabilities.CustomerInformationMgmt.Person;
 
 namespace PoC.SystemTest.WorkFlowServer
 {
