@@ -56,14 +56,14 @@ namespace PoC.API.Controllers
         }
 
         /// <inheritdoc />
-        [HttpPost("{id}/AskForDetails")]
+        [HttpPost("AskForDetails")]
         public Task<Person> AskUserToFillInDetailsAsync(string id, Person person, CancellationToken cancellationToken)
         {
             return _capability.Person.AskUserToFillInDetailsAsync(id, person, cancellationToken);
         }
 
         /// <inheritdoc />
-        [HttpPost("{id}/Validate")]
+        [HttpPost("Validate")]
         public Task<bool> ValidateAsync(Person person, CancellationToken cancellationToken)
         {
             return _capability.Person.ValidateAsync(person, cancellationToken);
