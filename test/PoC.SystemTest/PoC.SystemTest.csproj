@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PoC.AM\PoC.AM.csproj" />
+    <ProjectReference Include="..\..\src\PoC.Example.Abstract\PoC.Example.Abstract.csproj" />
     <ProjectReference Include="..\..\src\PoC.LinkLibraries\PoC.LinkLibraries.csproj" />
   </ItemGroup>
 
