@@ -16,7 +16,7 @@ namespace PoC.API.RestClients.CustomerInformationMgmt
         /// <inheritdoc />
         public Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default)
         {
-            return PostAsync<Person>($"?personalNumber={personalNumber}", null, cancellationToken);
+            return PostAsync<Person>($"By?personalNumber={personalNumber}", null, cancellationToken);
         }
 
         /// <inheritdoc />

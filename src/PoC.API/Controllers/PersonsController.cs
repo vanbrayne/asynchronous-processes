@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Web.AspNet.Pipe.RespondAsync;
@@ -18,6 +20,13 @@ namespace PoC.API.Controllers
         }
 
         /// <inheritdoc />
+        [HttpGet("")]
+        public Task<IEnumerable<Person>> ReadAllAsync(int limit = int.MaxValue, CancellationToken cancellationToken = default)
+        {
+            return _capability.Person.ReadAllAsync(limit, cancellationToken);
+        }
+
+        /// <inheritdoc />
         [HttpGet("{id}")]
         public Task<Person> ReadAsync(string id, CancellationToken cancellationToken = default)
         {
@@ -33,8 +42,8 @@ namespace PoC.API.Controllers
         }
 
         /// <inheritdoc />
-        [HttpGet("?personalNumber={personalNumber}")]
-        public Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default)
+        [HttpGet("/By")]
+        public Task<Person> GetByPersonalNumberAsync([FromQuery(Name = "personalNumber")] string personalNumber, CancellationToken cancellationToken = default)
         {
             return _capability.Person.GetByPersonalNumberAsync(personalNumber, cancellationToken);
         }
@@ -55,7 +64,7 @@ namespace PoC.API.Controllers
 
         /// <inheritdoc />
         [HttpPost("{id}/Validate")]
-        public  Task<bool> ValidateAsync(Person person, CancellationToken cancellationToken)
+        public Task<bool> ValidateAsync(Person person, CancellationToken cancellationToken)
         {
             return _capability.Person.ValidateAsync(person, cancellationToken);
         }

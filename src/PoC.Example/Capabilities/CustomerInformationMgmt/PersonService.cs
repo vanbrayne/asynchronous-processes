@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 using PoC.Example.Persistence;
@@ -75,6 +76,12 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
         {
             _validateResult = !_validateResult;
             return Task.FromResult(_validateResult);
+        }
+
+        /// <inheritdoc />
+        public Task<IEnumerable<Person>> ReadAllAsync(int limit = 2147483647, CancellationToken token = new CancellationToken())
+        {
+            return _personTable.ReadAllAsync(limit, token);
         }
     }
 }
