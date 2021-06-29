@@ -29,20 +29,28 @@ namespace PoC.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            Nexus.Link.Libraries.Web.AspNet.Application.FulcrumApplicationHelper.WebBasicSetup("asynchronous-processes", new Tenant("ignore", "local"), RunTimeLevelEnum.Development);
+            Nexus.Link.Libraries.Web.AspNet.Application.FulcrumApplicationHelper.WebBasicSetup(
+                "asynchronous-processes", 
+                new Tenant("ignore", "local"), 
+                RunTimeLevelEnum.Development);
             services.AddControllers();
-            var httpSender = new HttpSender("https://localhost:44308/");
+            DependencyInjection(services);
+        }
 
-            // Adapter1
+        private static void DependencyInjection(IServiceCollection services)
+        {
+
+            // Adapter1 (CustomersController and process implementation using REST clients)
+            var httpSender = new HttpSender("https://localhost:44308/");
             var comCapabilityUsingRest = new CommunicationMgmtRestClient(httpSender);
             var infoCapabilityUsingRest = new CustomerInformationMgmtRestClient(httpSender);
             var onboarding = new CustomerOnboardingMgmtCapability(infoCapabilityUsingRest, comCapabilityUsingRest);
             services.AddSingleton<ICustomerOnboardingMgmt>(onboarding);
 
-            // Adapter2
+            // Adapter2 (PersonsController and persistence implementation)
             services.AddSingleton<ICustomerInformationMgmtCapability, CustomerInformationMgmtCapability>();
 
-            // Adapter3
+            // Adapter3 (EmailsController and send implementation)
             services.AddSingleton<ICommunicationMgmtCapability, CommunicationMgmtCapability>();
         }
 
