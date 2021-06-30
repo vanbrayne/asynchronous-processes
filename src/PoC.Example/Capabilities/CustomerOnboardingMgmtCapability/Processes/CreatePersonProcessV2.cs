@@ -94,7 +94,8 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
         private async Task<Person> GetPersonActionAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
             var inPerson = stepInstance.GetArgument<Person>("Person");
-            var person = await Process.CustomerInformationMgmt.Person.GetByPersonalNumberAsync(inPerson.PersonalNumber, cancellationToken);
+            if (string.IsNullOrWhiteSpace(inPerson.PersonalNumber)) return null;
+            var person = await Process.CustomerInformationMgmt.Person.GetByPersonalNumberAsync(inPerson, cancellationToken);
             return person;
         }
 

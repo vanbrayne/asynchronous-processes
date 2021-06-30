@@ -52,9 +52,9 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
         }
 
         /// <inheritdoc />
-        public Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default)
+        public Task<Person> GetByPersonalNumberAsync(Person person, CancellationToken cancellationToken = default)
         {
-            return _personTable.GetByPersonalNumberAsync(personalNumber, cancellationToken);
+            return _personTable.GetByPersonalNumberAsync(person, cancellationToken);
         }
 
         /// <inheritdoc />

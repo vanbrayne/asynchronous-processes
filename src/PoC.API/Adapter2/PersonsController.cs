@@ -42,9 +42,9 @@ namespace PoC.API.Adapter2
 
         /// <inheritdoc />
         [HttpGet("/By")]
-        public Task<Person> GetByPersonalNumberAsync([FromQuery(Name = "personalNumber")] string personalNumber, CancellationToken cancellationToken = default)
+        public Task<Person> GetByPersonalNumberAsync(Person person, CancellationToken cancellationToken = default)
         {
-            return _capability.Person.GetByPersonalNumberAsync(personalNumber, cancellationToken);
+            return _capability.Person.GetByPersonalNumberAsync(person, cancellationToken);
         }
 
         /// <inheritdoc />
