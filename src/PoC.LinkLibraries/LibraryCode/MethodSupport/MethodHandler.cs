@@ -9,8 +9,8 @@ namespace PoC.LinkLibraries.LibraryCode.MethodSupport
     {
 
         private Dictionary<int, MethodParameter> _parameters = new Dictionary<int, MethodParameter>();
-
         private readonly Dictionary<string, MethodArgument> _arguments = new Dictionary<string, MethodArgument>();
+
         private readonly string _definitionTitle;
         private readonly string _instanceTitle;
 
@@ -40,6 +40,7 @@ namespace PoC.LinkLibraries.LibraryCode.MethodSupport
             var position = _parameters.Count + 1;
             _parameters.Add(position, new MethodParameter(name, type));
         }
+
         public void AddParameter<TParameter>(string name)
         {
             AddParameter(name, typeof(TParameter));
