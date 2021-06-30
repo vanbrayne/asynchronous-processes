@@ -1,28 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Nexus.Link.Libraries.Core.Assert;
+using Nexus.Link.Libraries.Core.Misc;
+using PoC.LinkLibraries.LibraryCode.MethodSupport;
 
 namespace PoC.LinkLibraries.LibraryCode
 {
     public abstract class ProcessInstance<T>
     {
+        protected MethodHandler MethodHandler { get; }
+
         public static ProcessInstance<T> CreateInstance(ProcessVersion<T> processVersion, string instanceName, object[] arguments)
         {
             throw new NotImplementedException($"You should create your own factory method with the same signature in your class.");
         }
 
         public ProcessVersion<T> ProcessVersion { get; }
+        public string Title { get; }
 
         public ProcessDefinition<T> ProcessDefinition => ProcessVersion.ProcessDefinition;
 
         protected ProcessInstance(ProcessVersion<T> processVersion, string instanceTitle, params object[] arguments)
         {
             ProcessVersion = processVersion;
-            // TODO: Set the arguments: Parameters.SetArguments(arguments);
+            Title = instanceTitle;
+            MethodHandler = processVersion.MethodHandler.NewInstance(instanceTitle, arguments);
         }
-
-        public Dictionary<string, object> Arguments { get; } = new Dictionary<string, object>();
 
         public abstract Task<T> ExecuteAsync(CancellationToken cancellationToken);
 
@@ -54,6 +60,11 @@ namespace PoC.LinkLibraries.LibraryCode
         protected ProcessStepInstance<T> LoopStep(ProcessStepInstance<T> parentStep, string stepTitle, string stepId, TimeSpan? expiresAt = null)
         {
             return Step(parentStep, stepTitle, ProcessStepTypeEnum.Loop, stepId, expiresAt);
+        }
+
+        protected TParameter GetArgument<TParameter>(string name)
+        {
+            return MethodHandler.GetArgument<TParameter>(name);
         }
 
         private ProcessStepInstance<T> Step(ProcessStepInstance<T> parentStep, string stepName, ProcessStepTypeEnum stepTypeEnum, string stepId, TimeSpan? expiresAt)

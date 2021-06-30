@@ -24,17 +24,20 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
             _personTable = personTable;
             _player1 = new Person
             {
-                Name = "Player1"
+                Name = "Player1",
+                PersonalNumber = "111111-1111"
             };
             _player1  = personTable.CreateAndReturnAsync(_player1).Result;
             _player2 = new Person
             {
-                Name = "Player2"
+                Name = "Player2",
+                PersonalNumber = "222222-2222"
             };
             _player2 = personTable.CreateAndReturnAsync(_player2).Result;
             _player3 = new Person
             {
-                Name = "Player3"
+                Name = "Player3",
+                PersonalNumber = "333333-3333"
             };
             _player3 = personTable.CreateAndReturnAsync(_player3).Result;
         }
@@ -52,9 +55,9 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
         }
 
         /// <inheritdoc />
-        public Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default)
+        public Task<Person> GetByPersonalNumberAsync(Person person, CancellationToken cancellationToken = default)
         {
-            return _personTable.GetByPersonalNumberAsync(personalNumber, cancellationToken);
+            return _personTable.GetByPersonalNumberAsync(person, cancellationToken);
         }
 
         /// <inheritdoc />

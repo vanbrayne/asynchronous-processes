@@ -8,6 +8,6 @@ namespace PoC.Example.Persistence
 {
     public interface IPersonTable : ICreateAndReturn<Person, string>, IRead<Person, string>, IReadAll<Person, string>
     {
-        Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default);
+        Task<Person> GetByPersonalNumberAsync(Person person, CancellationToken cancellationToken = default);
     }
 }

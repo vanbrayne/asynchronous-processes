@@ -7,7 +7,7 @@ namespace PoC.Example.Abstract.Capabilities.CustomerInformationMgmt
 {
     public interface IPersonService : ICreateAndReturn<Person, string>, IRead<Person, string>, IReadAll<Person, string>
     {
-        Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default);
+        Task<Person> GetByPersonalNumberAsync(Person person, CancellationToken cancellationToken = default);
         Task<Person> GetOfficialInformationAsync(Person person, CancellationToken cancellationToken = default);
 
         Task<Person> AskUserToFillInDetailsAsync(Person person, CancellationToken cancellationToken);
