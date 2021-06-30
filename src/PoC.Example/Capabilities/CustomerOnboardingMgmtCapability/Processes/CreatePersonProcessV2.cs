@@ -37,21 +37,23 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
             // 2. Condition: Person exists?
             var condition = ConditionStep("Person exists?", "C5A628AC-5BAD-4DF9-BA46-B878C06D47CE");
             condition.AddParameter<Person>("Person");
-            var exists = await condition.EvaluateAsync(PersonExistsAsync, cancellationToken, initialPerson);
+            var exists = await condition.EvaluateAsync(PersonExistsAsync, cancellationToken, existingPerson);
             if (exists) return existingPerson;
 
-            // 3. Get official data (from e.g. Klarna)
+            // 3. Get official data (from e.g. Klarna) :
             action = ActionStep("Get official data", "BA96BC20-83F3-4042-BA1C-B1068DE0AD8D", TimeSpan.FromHours(1))
                 .Idempotent();
             action.AddParameter<Person>("Person");
-            var officialPersonData = await action.ExecuteAsync(GetOfficialDataAsync, cancellationToken, existingPerson);
-            officialPersonData ??= existingPerson;
+            var officialPersonData = await action.ExecuteAsync(GetOfficialDataAsync, cancellationToken, initialPerson);
+            officialPersonData ??= initialPerson;
 
             // 4. do-while loop to get valid person data
             var loop = LoopStep("Loop to get valid person data", "7FB1FEEE-11DC-44A4-BFBF-C1EEA0D34F74");
+            loop.AddParameter<Person>("Person");
             var correctedPerson = await loop.ExecuteAsync(AskUserToCorrectTheirInformationAsync, cancellationToken, officialPersonData);
 
             loop = LoopStep("Loop to inform players", "4E083535-7FF1-4DB9-A605-2C22607298A1");
+            loop.AddParameter<Person>("Person");
             await loop.ExecuteAsync(InformPlayers, cancellationToken, correctedPerson);
 
 
@@ -76,6 +78,8 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
             {
                 var action = ActionStep(loopStepInstance, $"Send mail to player",
                     "2CBE2645-436B-4386-9A15-EAF6BFD82D9F");
+                action.AddParameter<Person>("Person");
+                action.AddParameter<Person>("Player");
                 await action.ExecuteAsync(SendMailToPlayerAsync, cancellationToken, inPerson, player);
             }
         }
@@ -83,7 +87,7 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
         private Task SendMailToPlayerAsync(ProcessStepInstance<Person> loopStepInstance, CancellationToken cancellationToken)
         {
             var inPerson = loopStepInstance.GetArgument<Person>("Person");
-            var player = loopStepInstance.GetArgument<Person>("Person");
+            var player = loopStepInstance.GetArgument<Person>("Player");
 
             return Process.CommunicationMgmt.Email.SendEmailAsync(
                 new Email(player.EmailAddress, "You have a new fan!",
@@ -144,14 +148,16 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
             Person personDetailsFromUser;
             do
             {
-                await loopStepInstance.IterationAsync(++count);
+                await loopStepInstance.IterationAsync($"Loop Number {++count }");
 
                 // 4.i.1 Request data from the user
                 var action = ActionStep(loopStepInstance, "Ask user to correct data and fill in missing data.", "96D25A66-15A5-4E1F-81BC-2438491A7401");
+                action.AddParameter<Person>("Person");
                 personDetailsFromUser = await action.ExecuteAsync(GetDataFromUserAsync, cancellationToken, inPerson);
 
                 var condition = ConditionStep(loopStepInstance, "Verify user input.",
                     "0CA6B036-F448-4EC3-A757-36565CCF8534");
+                condition.AddParameter<Person>("Person");
                 isValid = await condition.EvaluateAsync(VerifyUserInput, cancellationToken, personDetailsFromUser);
             } while (!isValid);
 

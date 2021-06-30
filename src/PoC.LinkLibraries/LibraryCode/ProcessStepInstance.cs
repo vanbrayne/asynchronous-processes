@@ -32,12 +32,14 @@ namespace PoC.LinkLibraries.LibraryCode
 
         public ProcessStepInstance<TProcessReturnType> Synchronous()
         {
-            throw new NotImplementedException();
+            //TODO : Implement this properly later
+            return this;
         }
 
         public ProcessStepInstance<TProcessReturnType> Idempotent()
         {
-            throw new NotImplementedException();
+            //TODO : Implement this properly later
+            return this;
         }
 
         public Task<TMethodReturnType> ExecuteAsync<TMethodReturnType>(StepActionMethod<TProcessReturnType, TMethodReturnType> method, CancellationToken cancellationToken, params object[] arguments)
@@ -93,6 +95,7 @@ namespace PoC.LinkLibraries.LibraryCode
             // TODO: Create/update Arguments in DB
             try
             {
+                MethodHandler.SetArguments(arguments);
                 await method(this, cancellationToken);
                 // TODO: Update the DB StepInstance with FinishedAt
                 // TODO: Create/update LatestResponse in DB
@@ -108,11 +111,12 @@ namespace PoC.LinkLibraries.LibraryCode
             }
         }
 
-        public Task IterationAsync(int i)
+        public Task IterationAsync(string current)
         {
-            InternalContract.RequireAreEqual(ProcessStepTypeEnum.Loop, _processStep.StepType, null, 
+            ////TODO : Implement this properly later
+            InternalContract.RequireAreEqual(ProcessStepTypeEnum.Loop, _processStep.StepType, "Ignore",
                 $"The step {_processStep} was declared as {_processStep.StepType}, so you can't call {nameof(EvaluateAsync)}.");
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public void AddParameter<TParameter>(string name)
