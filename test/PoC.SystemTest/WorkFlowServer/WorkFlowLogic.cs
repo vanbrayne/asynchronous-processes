@@ -6,7 +6,7 @@ using PoC.AM.Abstract.Model;
 using PoC.LinkLibraries;
 using PoC.SystemTest.BusinessApiServer;
 using ExecutionContext = PoC.AM.Abstract.Model.ExecutionContext;
-using Person = PoC.Example.Abstract.Capabilities.CustomerInformationMgmt.Person;
+using Person = PoC.Example.Abstract.Capabilities.Common.Person;
 
 namespace PoC.SystemTest.WorkFlowServer
 {

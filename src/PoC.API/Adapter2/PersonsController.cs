@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nexus.Link.Libraries.Web.AspNet.Pipe.RespondAsync;
+using PoC.Example.Abstract.Capabilities.Common;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 
-namespace PoC.API.Controllers
+namespace PoC.API.Adapter2
 {
     [ApiController]
     [Route("Persons")]
@@ -35,17 +35,16 @@ namespace PoC.API.Controllers
 
         /// <inheritdoc />
         [HttpPost("")]
-        [RespondAsync(RespondAsyncOpinionEnum.Always)]
         public Task<Person> CreateAndReturnAsync(Person item, CancellationToken cancellationToken = default)
         {
             return _capability.Person.CreateAndReturnAsync(item, cancellationToken);
         }
 
         /// <inheritdoc />
-        [HttpGet("/By")]
-        public Task<Person> GetByPersonalNumberAsync([FromQuery(Name = "personalNumber")] string personalNumber, CancellationToken cancellationToken = default)
+        [HttpPost("ByPersonalNumber")]
+        public Task<Person> GetByPersonalNumberAsync(Person person, CancellationToken cancellationToken = default)
         {
-            return _capability.Person.GetByPersonalNumberAsync(personalNumber, cancellationToken);
+            return _capability.Person.GetByPersonalNumberAsync(person, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -57,9 +56,9 @@ namespace PoC.API.Controllers
 
         /// <inheritdoc />
         [HttpPost("AskForDetails")]
-        public Task<Person> AskUserToFillInDetailsAsync(string id, Person person, CancellationToken cancellationToken)
+        public Task<Person> AskUserToFillInDetailsAsync(Person person, CancellationToken cancellationToken)
         {
-            return _capability.Person.AskUserToFillInDetailsAsync(id, person, cancellationToken);
+            return _capability.Person.AskUserToFillInDetailsAsync(person, cancellationToken);
         }
 
         /// <inheritdoc />

@@ -1,9 +1,11 @@
-﻿using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
+﻿using PoC.Example.Abstract.Capabilities.Common;
+using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
-using PoC.Example.Capabilities.CustomerInformationMgmt.Processes;
+using PoC.Example.Abstract.Capabilities.CustomerOnboardingMgmt;
+using PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes;
 using PoC.LinkLibraries.LibraryCode;
 
-namespace PoC.Example.Capabilities.CustomerInformationMgmt
+namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability
 {
     public class CreatePersonProcess : ProcessDefinition<Person>, ICreatePersonProcess
     {
@@ -19,10 +21,7 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
             //var version = Versions.Add(1, 2, Version1Async); 
             //version.Parameters.Add("personalNumber");
             var version = ProcessVersions.Add<CreatePersonProcessV2>(2, 1);
-            // TODO: Make Parameters a class and change Add to Register(string parameterName, Type parameterType)
-            // TODO: NO need for numbers, they are sequential
-            version.Parameters.Add(1, "Person");
-
+            version.AddParameter<Person>("Person");
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Crud.Web.RestClient;
 using Nexus.Link.Libraries.Web.RestClientHelper;
+using PoC.Example.Abstract.Capabilities.Common;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
 
 namespace PoC.API.RestClients.CustomerInformationMgmt
@@ -14,9 +15,9 @@ namespace PoC.API.RestClients.CustomerInformationMgmt
         }
 
         /// <inheritdoc />
-        public Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default)
+        public Task<Person> GetByPersonalNumberAsync(Person person, CancellationToken cancellationToken = default)
         {
-            return PostAsync<Person>($"By?personalNumber={personalNumber}", null, cancellationToken);
+            return PostAndReturnCreatedObjectAsync<Person>($"ByPersonalNumber", person, null, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -26,15 +27,15 @@ namespace PoC.API.RestClients.CustomerInformationMgmt
         }
 
         /// <inheritdoc />
-        public Task<Person> AskUserToFillInDetailsAsync(string id, Person person, CancellationToken cancellationToken)
+        public Task<Person> AskUserToFillInDetailsAsync(Person person, CancellationToken cancellationToken)
         {
-            return PostAndReturnCreatedObjectAsync($"{id}/AskForDetails", person, null, cancellationToken);
+            return PostAndReturnCreatedObjectAsync("AskForDetails", person, null, cancellationToken);
         }
 
         /// <inheritdoc />
         public Task<bool> ValidateAsync(Person person, CancellationToken cancellationToken)
         {
-            return PostAsync<bool, Person>($"{person.Id}/Validate", person, null, cancellationToken);
+            return PostAsync<bool, Person>("Validate", person, null, cancellationToken);
         }
     }
 }

@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using PoC.Example.Abstract.Capabilities.Common;
+using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 using PoC.Example.Abstract.Capabilities.CustomerInformationMgmt;
+using PoC.Example.Abstract.Capabilities.CustomerOnboardingMgmt;
 using PoC.Example.Persistence;
+using IPersonService = PoC.Example.Abstract.Capabilities.CustomerInformationMgmt.IPersonService;
 
 namespace PoC.Example.Capabilities.CustomerInformationMgmt
 {
@@ -14,32 +18,33 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
         private Person _player2;
         private Person _player3;
 
-        public PersonService(ICustomerInformationMgmtCapability capability, IPersonTable personTable)
+        public PersonService(ICustomerInformationMgmtCapability capability, IPersonTable personTable, ICommunicationMgmtCapability communicationMgmtCapability)
         {
             _capability = capability;
             _personTable = personTable;
             _player1 = new Person
             {
-                Name = "Player1"
+                Name = "Player1",
+                PersonalNumber = "111111-1111"
             };
             _player1  = personTable.CreateAndReturnAsync(_player1).Result;
             _player2 = new Person
             {
-                Name = "Player2"
+                Name = "Player2",
+                PersonalNumber = "222222-2222"
             };
             _player2 = personTable.CreateAndReturnAsync(_player2).Result;
             _player3 = new Person
             {
-                Name = "Player3"
+                Name = "Player3",
+                PersonalNumber = "333333-3333"
             };
             _player3 = personTable.CreateAndReturnAsync(_player3).Result;
         }
 
         /// <inheritdoc />
-        public async Task<Person> CreateAndReturnAsync(Person item, CancellationToken cancellationToken = default)
+        public async Task<Person> CreateAndReturnAsync(Person person, CancellationToken cancellationToken = default)
         {
-            // TODO: Always use latest version
-            var person = await _capability.CreatePersonProcess.ExecuteAsync($"{item.EmailAddress}", cancellationToken, item);
             return await _personTable.CreateAndReturnAsync(person, cancellationToken);
         }
 
@@ -50,9 +55,9 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
         }
 
         /// <inheritdoc />
-        public Task<Person> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken = default)
+        public Task<Person> GetByPersonalNumberAsync(Person person, CancellationToken cancellationToken = default)
         {
-            return _personTable.GetByPersonalNumberAsync(personalNumber, cancellationToken);
+            return _personTable.GetByPersonalNumberAsync(person, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -63,14 +68,14 @@ namespace PoC.Example.Capabilities.CustomerInformationMgmt
         }
 
         /// <inheritdoc />
-        public Task<Person> AskUserToFillInDetailsAsync(string id, Person person, CancellationToken cancellationToken)
+        public Task<Person> AskUserToFillInDetailsAsync(Person person, CancellationToken cancellationToken)
         {
             person.FavoriteFootballPlayers.Add(_player1);
             person.FavoriteFootballPlayers.Add(_player3);
             return Task.FromResult(person);
         }
-
-        private static bool _validateResult = false;
+        
+        private bool _validateResult;
         /// <inheritdoc />
         public Task<bool> ValidateAsync(Person person, CancellationToken cancellationToken)
         {

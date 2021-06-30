@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 
-namespace PoC.API.Controllers
+namespace PoC.API.Adapter3
 {
     [ApiController]
     [Route("Persons")]

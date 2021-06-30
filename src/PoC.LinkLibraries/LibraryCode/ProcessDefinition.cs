@@ -42,10 +42,10 @@ namespace PoC.LinkLibraries.LibraryCode
             var methodInfo = version.Type.GetMethod(nameof(ProcessInstance<T>.CreateInstance));
             // TODO: Proper error message
             InternalContract.RequireNotNull(methodInfo, null, $"Error message");
-            var createMethod = (Func<ProcessVersion<T>, string, object[], ProcessInstance<T>>)Delegate.CreateDelegate(
+            var factoryMethod = (Func<ProcessVersion<T>, string, object[], ProcessInstance<T>>)Delegate.CreateDelegate(
                 typeof(Func<ProcessVersion<T>, string, object[], ProcessInstance<T>>), methodInfo!);
 
-            var instance = createMethod(version, instanceTitle, arguments);
+            var instance = factoryMethod(version, instanceTitle, arguments);
             try
             {
                 var result = await instance.ExecuteAsync(cancellationToken);
@@ -65,7 +65,7 @@ namespace PoC.LinkLibraries.LibraryCode
         }
 
         /// <inheritdoc />
-        public override string ToString() => $"{Title} ({Id})";
+        public override string ToString() => $"{Title}";
 
         public void Dispose()
         {
