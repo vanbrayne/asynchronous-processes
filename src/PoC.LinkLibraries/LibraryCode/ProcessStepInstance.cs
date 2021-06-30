@@ -58,7 +58,7 @@ namespace PoC.LinkLibraries.LibraryCode
 
         public Task<bool> EvaluateAsync(StepActionMethod<TProcessReturnType, bool> method, CancellationToken cancellationToken, params object[] arguments)
         {
-            InternalContract.RequireAreEqual(ProcessStepTypeEnum.Condition, _processStep.StepType, null, 
+            InternalContract.RequireAreEqual(ProcessStepTypeEnum.Condition, _processStep.StepType, "this does not concern a specific parameter", 
                 $"The step {_processStep} was declared as {_processStep.StepType}, so you can't call {nameof(EvaluateAsync)}.");
 
             return InternalExecuteAsync(method, cancellationToken, arguments);

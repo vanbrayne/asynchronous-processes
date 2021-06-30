@@ -95,8 +95,18 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
         {
             var inPerson = stepInstance.GetArgument<Person>("Person");
             if (string.IsNullOrWhiteSpace(inPerson.PersonalNumber)) return null;
-            var person = await Process.CustomerInformationMgmt.Person.GetByPersonalNumberAsync(inPerson, cancellationToken);
-            return person;
+            // TODO: Make Libraries.Web accept 204 and return null in that case
+            try
+            {
+                var person =
+                    await Process.CustomerInformationMgmt.Person.GetByPersonalNumberAsync(inPerson, cancellationToken);
+                return person;
+            }
+            catch (FulcrumResourceException)
+            {
+                return null;
+            }
+
         }
 
         private Task<bool> PersonExistsAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
