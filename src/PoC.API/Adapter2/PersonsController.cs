@@ -41,7 +41,7 @@ namespace PoC.API.Adapter2
         }
 
         /// <inheritdoc />
-        [HttpGet("/By")]
+        [HttpPost("ByPersonalNumber")]
         public Task<Person> GetByPersonalNumberAsync(Person person, CancellationToken cancellationToken = default)
         {
             return _capability.Person.GetByPersonalNumberAsync(person, cancellationToken);

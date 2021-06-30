@@ -12,6 +12,7 @@ namespace PoC.Example.Persistence
         /// <inheritdoc />
         public Task<Person> GetByPersonalNumberAsync(Person person, CancellationToken cancellationToken = default)
         {
+            if (string.IsNullOrWhiteSpace(person.PersonalNumber)) return null;
             return FindUniqueAsync(new SearchDetails<Person>(new {PersonalNumber = person.PersonalNumber}), cancellationToken);
         }
     }
