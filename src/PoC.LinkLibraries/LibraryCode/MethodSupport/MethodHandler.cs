@@ -11,20 +11,25 @@ namespace PoC.LinkLibraries.LibraryCode.MethodSupport
         private Dictionary<int, MethodParameter> _parameters = new Dictionary<int, MethodParameter>();
 
         private readonly Dictionary<string, MethodArgument> _arguments = new Dictionary<string, MethodArgument>();
-        private readonly string _definitionName;
-        private string? _instanceName;
+        private readonly string _definitionTitle;
+        private readonly string _instanceTitle;
 
-        public MethodHandler(string definitionName)
+        public MethodHandler(string definitionTitle)
         {
-            _definitionName = definitionName;
+            _definitionTitle = definitionTitle;
         }
 
-        public MethodHandler NewInstance(string instanceName, object[] arguments)
+        public MethodHandler(string definitionTitle, string instanceTitle)
         {
-            var instance = new MethodHandler(_definitionName)
+            _definitionTitle = definitionTitle;
+            _instanceTitle = instanceTitle;
+        }
+
+        public MethodHandler NewInstance(string instanceTitle, object[] arguments)
+        {
+            var instance = new MethodHandler(_definitionTitle, instanceTitle)
             {
-                _parameters = _parameters,
-                _instanceName = instanceName
+                _parameters = _parameters
             };
             instance.SetArguments(arguments);
             return instance;
@@ -50,7 +55,7 @@ namespace PoC.LinkLibraries.LibraryCode.MethodSupport
             if (!_arguments.TryGetValue(parameterName, out var argument))
             {
                 var argumentParameters = string.Join(", ", _arguments.Values.Select(a => a.Parameter.Name));
-                InternalContract.Fail($"{_definitionName} has a parameter named {parameterName}, but {_instanceName} had no argument for that parameter. Found these: {argumentParameters}");
+                InternalContract.Fail($"{_definitionTitle} has a parameter named {parameterName}, but {_instanceTitle} had no argument for that parameter. Found these: {argumentParameters}");
                 return default;
             }
 

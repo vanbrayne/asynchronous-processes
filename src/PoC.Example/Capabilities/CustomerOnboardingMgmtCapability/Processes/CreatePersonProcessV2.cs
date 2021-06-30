@@ -10,7 +10,6 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
 {
     public class CreatePersonProcessV2 : ProcessInstance<Person>
     {
-        private Person _initialPerson;
 
         public new CreatePersonProcess Process => (CreatePersonProcess)base.ProcessDefinition;
 
@@ -27,25 +26,26 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
         public override async Task<Person> ExecuteAsync(CancellationToken cancellationToken)
         {
             // TODO: Type check the argument vs. the cast type
-            _initialPerson = GetArgument<Person>("Person");
+            var initialPerson = GetArgument<Person>("Person");
 
             // 1. Action: Get person
             // TODO: Define parameters
             var action = ActionStep("Get person", "A4D6F17F-ED40-4318-A08B-482302E53063");
-            action.Parameters.Add(1, "Person");
-            var existingPerson = await action.ExecuteAsync(GetPersonActionAsync, cancellationToken, _initialPerson);
+            action.AddParameter<Person>("Person");
+            var existingPerson = await action.ExecuteAsync(GetPersonActionAsync, cancellationToken, initialPerson);
 
             // 2. Condition: Person exists?
             var condition = ConditionStep("Person exists?", "C5A628AC-5BAD-4DF9-BA46-B878C06D47CE");
-            condition.Parameters.Add(1, "Person");
-            var exists = await condition.EvaluateAsync(PersonExistsAsync, cancellationToken, _initialPerson);
+            condition.AddParameter<Person>("Person");
+            var exists = await condition.EvaluateAsync(PersonExistsAsync, cancellationToken, initialPerson);
             if (exists) return existingPerson;
 
             // 3. Get official data (from e.g. Klarna)
             action = ActionStep("Get official data", "BA96BC20-83F3-4042-BA1C-B1068DE0AD8D", TimeSpan.FromHours(1))
                 .Idempotent();
-            action.Parameters.Add(1, "Person");
-            var officialPersonData = await action.ExecuteAsync(GetOfficialDataAsync, cancellationToken, _initialPerson);
+            action.AddParameter<Person>("Person");
+            var officialPersonData = await action.ExecuteAsync(GetOfficialDataAsync, cancellationToken, existingPerson);
+            officialPersonData ??= existingPerson;
 
             // 4. do-while loop to get valid person data
             var loop = LoopStep("Loop to get valid person data", "7FB1FEEE-11DC-44A4-BFBF-C1EEA0D34F74");
@@ -71,7 +71,7 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
 
         private async Task InformPlayers(ProcessStepInstance<Person> loopStepInstance, CancellationToken cancellationToken)
         {
-            var inPerson = (Person)loopStepInstance.Arguments["Person"];
+            var inPerson = loopStepInstance.GetArgument<Person>("Person");
             foreach (var player in inPerson.FavoriteFootballPlayers)
             {
                 var action = ActionStep(loopStepInstance, $"Send mail to player",
@@ -82,8 +82,8 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
 
         private Task SendMailToPlayerAsync(ProcessStepInstance<Person> loopStepInstance, CancellationToken cancellationToken)
         {
-            var inPerson = (Person)loopStepInstance.Arguments["Person"];
-            var player = (Person)loopStepInstance.Arguments["Player"];
+            var inPerson = loopStepInstance.GetArgument<Person>("Person");
+            var player = loopStepInstance.GetArgument<Person>("Person");
 
             return Process.CommunicationMgmt.Email.SendEmailAsync(
                 new Email(player.EmailAddress, "You have a new fan!",
@@ -93,20 +93,20 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
 
         private async Task<Person> GetPersonActionAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
-            var inPerson = (Person)stepInstance.Arguments["Person"];
-            var person = await Process.CustomerInformationMgmt.Person.GetByPersonalNumberAsync(_initialPerson.PersonalNumber, cancellationToken);
+            var inPerson = stepInstance.GetArgument<Person>("Person");
+            var person = await Process.CustomerInformationMgmt.Person.GetByPersonalNumberAsync(inPerson.PersonalNumber, cancellationToken);
             return person;
         }
 
         private Task<bool> PersonExistsAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
-            var inPerson = (Person)stepInstance.Arguments["Person"];
+            var inPerson = stepInstance.GetArgument<Person>("Person");
             return Task.FromResult(inPerson != null);
         }
 
         private async Task<Person> GetOfficialDataAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
-            var inPerson = (Person)stepInstance.Arguments["Person"];
+            var inPerson = stepInstance.GetArgument<Person>("Person");
             try
             {
                 var personDataTemplate = await Process.CustomerInformationMgmt.Person.GetOfficialInformationAsync(inPerson, cancellationToken);
@@ -127,7 +127,7 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
 
         private async Task<Person> AskUserToCorrectTheirInformationAsync(ProcessStepInstance<Person> loopStepInstance, CancellationToken cancellationToken)
         {
-            var inPerson = (Person)loopStepInstance.Arguments["Person"];
+            var inPerson = loopStepInstance.GetArgument<Person>("Person");
             bool isValid;
             var count = 0;
             Person personDetailsFromUser;
@@ -149,14 +149,14 @@ namespace PoC.Example.Capabilities.CustomerOnboardingMgmtCapability.Processes
 
         private async Task<bool> VerifyUserInput(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
-            var inPerson = (Person)stepInstance.Arguments["Person"];
+            var inPerson = stepInstance.GetArgument<Person>("Person");
             var ok = await Process.CustomerInformationMgmt.Person.ValidateAsync(inPerson, cancellationToken);
             return ok;
         }
 
         private async Task<Person> GetDataFromUserAsync(ProcessStepInstance<Person> stepInstance, CancellationToken cancellationToken)
         {
-            var inPerson = (Person)stepInstance.Arguments["Person"];
+            var inPerson = stepInstance.GetArgument<Person>("Person");
             var person =
                 await Process.CustomerInformationMgmt.Person.AskUserToFillInDetailsAsync(inPerson, cancellationToken);
             return person;

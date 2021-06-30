@@ -11,7 +11,7 @@ namespace PoC.LinkLibraries.LibraryCode
 {
     public abstract class ProcessInstance<T>
     {
-        public MethodHandler MethodHandler { get; }
+        protected MethodHandler MethodHandler { get; }
 
         public static ProcessInstance<T> CreateInstance(ProcessVersion<T> processVersion, string instanceName, object[] arguments)
         {

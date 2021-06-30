@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Core.Assert;
 using PoC.AM.Abstract.Exceptions;
+using PoC.LinkLibraries.LibraryCode.MethodSupport;
 
 namespace PoC.LinkLibraries.LibraryCode
 {
@@ -19,13 +21,14 @@ namespace PoC.LinkLibraries.LibraryCode
         private readonly ProcessInstance<TProcessReturnType> _instance;
         private readonly ProcessStep<TProcessReturnType> _processStep;
 
+        protected MethodHandler MethodHandler { get; }
+
         public ProcessStepInstance(ProcessInstance<TProcessReturnType> instance, ProcessStep<TProcessReturnType> processStep)
         {
             _instance = instance;
             _processStep = processStep;
+            MethodHandler = new MethodHandler(processStep.ToString(), instance.Title);
         }
-        public Dictionary<int, string> Parameters { get;  } = new Dictionary<int, string>();
-        public Dictionary<string, object> Arguments { get; } = new Dictionary<string, object>();
 
         public ProcessStepInstance<TProcessReturnType> Synchronous()
         {
@@ -109,6 +112,16 @@ namespace PoC.LinkLibraries.LibraryCode
             InternalContract.RequireAreEqual(ProcessStepTypeEnum.Loop, _processStep.StepType, null, 
                 $"The step {_processStep} was declared as {_processStep.StepType}, so you can't call {nameof(EvaluateAsync)}.");
             throw new NotImplementedException();
+        }
+
+        public void AddParameter<TParameter>(string name)
+        {
+            MethodHandler.AddParameter<TParameter>(name);
+        }
+
+        public TParameter GetArgument<TParameter>(string parameterName)
+        {
+            return MethodHandler.GetArgument<TParameter>(parameterName);
         }
     }
 }
