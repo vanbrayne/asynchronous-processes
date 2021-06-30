@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace PoC.LinkLibraries.LibraryCode
+namespace PoC.LinkLibraries.LibraryCode.MethodSupport
 {
-    public class MethodParameter
+    internal class MethodParameter
     {
         public MethodParameter(string name, Type type)
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using PoC.LinkLibraries.LibraryCode.MethodSupport;
 
 namespace PoC.LinkLibraries.LibraryCode
 {
@@ -15,23 +16,17 @@ namespace PoC.LinkLibraries.LibraryCode
             ProcessDefinition = processDefinition;
         }
 
-        private readonly Dictionary<int, MethodParameter> _parameters = new Dictionary<int, MethodParameter>();
-
-        public void AddParameter<TParameter>(string name)
-        {
-            var position = _parameters.Count + 1;
-            _parameters.Add(position, new MethodParameter(name, typeof(TParameter)));
-        }
-
-        public MethodParameter GetParameter(int position)
-        {
-            return _parameters[position];
-        }
         public int MajorVersion { get; set; }
         public int MinorVersion { get; set; }
         public Type Type { get; set; }
+        public MethodHandler MethodHandler { get; set; }
 
         /// <inheritdoc />
         public override string ToString() => $"{ProcessDefinition} {MajorVersion}.{MinorVersion}";
+
+        public void AddParameter<TParameter>(string name)
+        {
+            MethodHandler.AddParameter<TParameter>(name);
+        }
     }
 }

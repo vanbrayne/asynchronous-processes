@@ -5,12 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nexus.Link.Libraries.Core.Assert;
 using Nexus.Link.Libraries.Core.Misc;
+using PoC.LinkLibraries.LibraryCode.MethodSupport;
 
 namespace PoC.LinkLibraries.LibraryCode
 {
     public abstract class ProcessInstance<T>
     {
-        private readonly Dictionary<string, MethodArgument> _arguments = new Dictionary<string, MethodArgument>();
+        public MethodHandler MethodHandler { get; }
 
         public static ProcessInstance<T> CreateInstance(ProcessVersion<T> processVersion, string instanceName, object[] arguments)
         {
@@ -26,49 +27,7 @@ namespace PoC.LinkLibraries.LibraryCode
         {
             ProcessVersion = processVersion;
             Title = instanceTitle;
-            var position = 0;
-            foreach (var value in arguments)
-            {
-                position++;
-                var parameter = ProcessVersion.GetParameter(position);
-                SetArgument(parameter, value);
-            }
-        }
-
-        public void SetArgument(MethodParameter parameter, object value)
-        {
-            if (value == null)
-            {
-                InternalContract.Require(parameter.IsNullable, 
-                    $"The parameter {parameter} does not accept the value null.");
-            }
-            else
-            {
-                InternalContract.Require(parameter.Type.IsInstanceOfType(value), 
-                    $"Expected {nameof(value)} to be an instance of type {parameter.Type.FullName}, but was of type {value.GetType().FullName}.");
-            }
-            
-            var argument = new MethodArgument(parameter, value);
-            _arguments.Add(parameter.Name, argument);
-        }
-
-        public object GetArgument(string parameterName)
-        {
-            if (!_arguments.TryGetValue(parameterName, out var argument))
-            {
-                var argumentParameters = string.Join(", ", _arguments.Values.Select(a => a.Parameter.Name));
-                InternalContract.Fail($"The process {ProcessVersion} has a parameter named {parameterName}, but this instance {Title} had no argument for that parameter. Found these: {argumentParameters}");
-                return default;
-            }
-
-            FulcrumAssert.IsTrue(argument.Parameter.Type.IsInstanceOfType(argument.Value), CodeLocation.AsString());
-
-            return argument.Value;
-        }
-
-        public TArgument GetArgument<TArgument>(string parameterName)
-        {
-            return (TArgument) GetArgument(parameterName);
+            MethodHandler = processVersion.MethodHandler.NewInstance(instanceTitle, arguments);
         }
 
         public abstract Task<T> ExecuteAsync(CancellationToken cancellationToken);
@@ -101,6 +60,11 @@ namespace PoC.LinkLibraries.LibraryCode
         protected ProcessStepInstance<T> LoopStep(ProcessStepInstance<T> parentStep, string stepTitle, string stepId, TimeSpan? expiresAt = null)
         {
             return Step(parentStep, stepTitle, ProcessStepTypeEnum.Loop, stepId, expiresAt);
+        }
+
+        protected TParameter GetArgument<TParameter>(string name)
+        {
+            return MethodHandler.GetArgument<TParameter>(name);
         }
 
         private ProcessStepInstance<T> Step(ProcessStepInstance<T> parentStep, string stepName, ProcessStepTypeEnum stepTypeEnum, string stepId, TimeSpan? expiresAt)

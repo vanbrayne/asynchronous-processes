@@ -1,6 +1,6 @@
-﻿namespace PoC.LinkLibraries.LibraryCode
+﻿namespace PoC.LinkLibraries.LibraryCode.MethodSupport
 {
-    public class MethodArgument
+    internal class MethodArgument
     {
         public MethodArgument(MethodParameter parameter, object value)
         {
