@@ -65,7 +65,7 @@ namespace PoC.LinkLibraries.LibraryCode
         }
 
         /// <inheritdoc />
-        public override string ToString() => $"{Title} ({Id})";
+        public override string ToString() => $"{Title}";
 
         public void Dispose()
         {

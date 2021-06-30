@@ -70,6 +70,7 @@ namespace PoC.LinkLibraries.LibraryCode
             // TODO: Create/update Arguments in DB
             try
             {
+                MethodHandler.SetArguments(arguments);
                 var result = await method(this, cancellationToken);
                 // TODO: Update the DB StepInstance with FinishedAt
                 // TODO: Create/update LatestResponse in DB

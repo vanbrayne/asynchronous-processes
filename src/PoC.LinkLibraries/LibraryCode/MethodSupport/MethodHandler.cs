@@ -69,7 +69,7 @@ namespace PoC.LinkLibraries.LibraryCode.MethodSupport
             return (TArgument)GetArgument(parameterName);
         }
 
-        private void SetArguments(object[] values)
+        public void SetArguments(object[] values)
         {
             for (var i = 0; i < values.Length; i++)
             {
