@@ -10,6 +10,10 @@ namespace PoC.Example.Abstract.Capabilities.CommunicationMgmt
 
     public class Email
     {
+        public Email()
+        {
+
+        }
         public Email(string to, string subject, string message = null)
         {
             To = to;

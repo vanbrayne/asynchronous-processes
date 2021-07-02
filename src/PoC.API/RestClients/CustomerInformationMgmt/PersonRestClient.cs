@@ -23,7 +23,7 @@ namespace PoC.API.RestClients.CustomerInformationMgmt
         /// <inheritdoc />
         public Task<Person> GetOfficialInformationAsync(Person person, CancellationToken cancellationToken = default)
         {
-            return PostAndReturnCreatedObjectAsync("OfficialInformation", person, null, cancellationToken);
+            return PostAndReturnCreatedObjectAsync($"OfficialInformation", person, null, cancellationToken);
         }
 
         /// <inheritdoc />

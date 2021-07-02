@@ -15,7 +15,7 @@ namespace PoC.API.RestClients.CommunicationMgmtCapability
         /// <inheritdoc />
         public Task SendEmailAsync(Email email, CancellationToken cancellationToken = default)
         {
-            return PostAsync<bool, Email>("", email, null, cancellationToken);
+            return PostNoResponseContentAsync("", email, null, cancellationToken);
         }
     }
 }

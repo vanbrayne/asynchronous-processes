@@ -60,7 +60,11 @@ namespace PoC.LinkLibraries.LibraryCode.MethodSupport
                 return default;
             }
 
-            FulcrumAssert.IsTrue(argument.Parameter.Type.IsInstanceOfType(argument.Value), CodeLocation.AsString());
+            if(argument.Value != null)
+            {
+                FulcrumAssert.IsTrue(argument.Parameter.Type.IsInstanceOfType(argument.Value), CodeLocation.AsString());
+            }
+                
 
             return argument.Value;
         }
@@ -75,6 +79,10 @@ namespace PoC.LinkLibraries.LibraryCode.MethodSupport
             for (var i = 0; i < values.Length; i++)
             {
                 var position = i + 1;
+
+                InternalContract.Require(_parameters.ContainsKey(position ),
+                 $"There is no parameter in position {position}.");
+
                 var parameter = _parameters[position];
                 SetArgument(parameter.Name, values[i]);
             }

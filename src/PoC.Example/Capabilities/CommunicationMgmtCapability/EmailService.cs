@@ -6,10 +6,11 @@ namespace PoC.Example.Capabilities.CommunicationMgmtCapability
 {
     public class EmailService : IEmailService
     {
-        /// <inheritdoc />
+           /// <inheritdoc />
         public Task SendEmailAsync(Email email, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            return Task.CompletedTask;
+            //throw new System.NotImplementedException();
         }
     }
 }

@@ -6,7 +6,7 @@ using PoC.Example.Abstract.Capabilities.CommunicationMgmt;
 namespace PoC.API.Adapter3
 {
     [ApiController]
-    [Route("Persons")]
+    [Route("Emails")]
     public class EmailsController : ControllerBase, IEmailService
     {
         private readonly ICommunicationMgmtCapability _capability;
